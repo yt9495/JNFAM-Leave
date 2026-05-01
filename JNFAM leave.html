@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JNFAM Leave Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f6f9;--white:#ffffff;--border:#e0e6ed;--border2:#c8d4e0;
+  --text:#1a2332;--text-dim:#5a7a9a;--text-sub:#8a9ab0;
+  --accent:#1565c0;--accent-l:#e3eeff;
+  --green:#2e7d32;--green-l:#e8f5e9;
+  --yellow:#f57f17;--yellow-l:#fffde7;
+  --red:#c62828;--red-l:#ffebee;
+  --orange:#e65100;--orange-l:#fff3e0;
+  --shadow:0 2px 8px rgba(0,0,0,.08);--shadow-md:0 4px 16px rgba(0,0,0,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;font-size:14px;}
+.header{background:var(--white);border-bottom:2px solid var(--accent);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:38px;height:38px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;}
+.logo-text{font-size:18px;font-weight:700;color:var(--accent);}
+.logo-sub{font-size:11px;color:var(--text-sub);margin-top:1px;}
+.header-right{display:flex;gap:10px;align-items:center;}
+.sync-badge{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text-dim);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#bbb;}
+.sync-dot.on{background:var(--green);animation:pulse 2s infinite;}
+.sync-dot.ing{background:var(--yellow);animation:pulse .5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.mode-switch{display:flex;gap:8px;}
+.mode-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;}
+.tab{padding:12px 20px;border:none;background:transparent;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab:hover{color:var(--accent);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700;}
+.main{max-width:1300px;margin:0 auto;padding:24px 28px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
+.card-title{font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow);border-top:4px solid var(--accent);}
+.stat-card.g{border-top-color:var(--green);}
+.stat-card.y{border-top-color:var(--yellow);}
+.stat-card.r{border-top-color:var(--red);}
+.stat-lbl{font-size:11px;color:var(--text-sub);font-weight:600;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
+.stat-val{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);}
+.stat-card.g .stat-val{color:var(--green);}.stat-card.y .stat-val{color:var(--yellow);}.stat-card.r .stat-val{color:var(--red);}
+.stat-sub{font-size:11px;color:var(--text-sub);margin-top:4px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.form-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.form-grid.one{grid-template-columns:1fr;}
+.form-label{font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;margin-bottom:5px;text-transform:uppercase;}
+.form-input,.form-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;transition:border-color .2s;}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--accent);background:var(--white);}
+.form-hint{font-size:11px;color:var(--text-sub);margin-top:3px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
+.btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:#0d47a1;}
+.btn-secondary{background:var(--white);border:1px solid var(--border);color:var(--text);}.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+.btn-success{background:var(--green);color:#fff;}.btn-success:hover{background:#1b5e20;}
+.btn-danger{background:var(--red);color:#fff;}.btn-danger:hover{background:#b71c1c;}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--bg);padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;border-bottom:2px solid var(--border);text-transform:uppercase;}
+td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafbfc;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.b-wait{background:var(--yellow-l);color:var(--yellow);}
+.b-ok{background:var(--green-l);color:var(--green);}
+.b-no{background:var(--red-l);color:var(--red);}
+.b-cancel{background:var(--bg);color:var(--text-sub);border:1px solid var(--border);}
+.type-chip{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+.t-annual{background:var(--accent-l);color:var(--accent);}
+.t-half{background:#e8eaf6;color:#3949ab;}
+.t-sick{background:var(--red-l);color:var(--red);}
+.t-special{background:var(--orange-l);color:var(--orange);}
+.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.nav-btn{width:32px;height:32px;border-radius:8px;background:var(--white);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.cal-title{font-size:18px;font-weight:700;min-width:160px;}
+.cal-wrap{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg);border-bottom:1px solid var(--border);}
+.cal-dow{padding:10px 0;text-align:center;font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;}
+.cal-dow.sat{color:var(--accent);}.cal-dow.sun{color:var(--red);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-day{min-height:100px;padding:7px 6px 4px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.cal-day:nth-child(7n){border-right:none;}
+.cal-day:hover{background:#f8faff;}
+.cal-day.other{opacity:.25;}.cal-day.today{background:var(--accent-l);}
+.cal-day.sat .day-num span{color:var(--accent);}.cal-day.sun .day-num span{color:var(--red);}
+.day-num{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;}
+.today-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.lchip{display:block;padding:2px 5px;border-radius:3px;font-size:10px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lchip-ok{background:var(--green-l);color:var(--green);}
+.lchip-wait{background:var(--yellow-l);color:var(--yellow);}
+.emp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.emp-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow);}
+.emp-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.emp-sub{font-size:11px;color:var(--text-sub);margin-bottom:12px;}
+.leave-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:4px 0;}
+.leave-fill{height:100%;border-radius:3px;transition:width .5s;}
+.toast{position:fixed;bottom:24px;right:24px;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;transform:translateY(60px);opacity:0;transition:all .3s;z-index:300;box-shadow:var(--shadow-md);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{background:var(--green);color:#fff;}
+.toast.err{background:var(--red);color:#fff;}
+.toast.info{background:var(--accent);color:#fff;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--white);border-radius:16px;width:480px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-md);animation:slideUp .2s ease;}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:16px;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--text-sub);font-size:22px;cursor:pointer;padding:2px 8px;border-radius:6px;}
+.modal-close:hover{background:var(--bg);}
+.modal-body{padding:20px 22px;}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+.page{display:none;}.page.active{display:block;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-title{font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--border);}
+.info-box{border-radius:8px;padding:14px;margin-bottom:16px;font-size:13px;}
+.info-blue{background:var(--accent-l);border:1px solid var(--accent);color:var(--accent);}
+.info-green{background:var(--green-l);border:1px solid var(--green);color:var(--green);}
+code{background:var(--bg);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+@media(max-width:900px){.stat-grid{grid-template-columns:1fr 1fr}.emp-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.stat-grid{grid-template-columns:1fr}.emp-grid{grid-template-columns:1fr}.form-grid,.form-grid.three{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🌴</div>
+    <div>
+      <div class="logo-text">JNFAM Leave Management</div>
+      <div class="logo-sub">LEAVE REQUEST & APPROVAL SYSTEM · Real-time Sync</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="sync-badge">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncText">Connecting...</span>
+    </div>
+    <div class="mode-switch">
+      <button class="mode-btn active" onclick="setMode('emp',this)">👤 Employee</button>
+      <button class="mode-btn" onclick="setMode('admin',this)">🔑 Admin</button>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('calendar',this)">📅 Leave Calendar</button>
+  <button class="tab" onclick="showTab('apply',this)">✍️ Request Leave</button>
+  <button class="tab" onclick="showTab('mylist',this)">📋 My Leave Status</button>
+  <button class="tab admin-only" style="display:none" onclick="showTab('approve',this)">✅ Approve Requests</button>
+  <button class="tab admin-only" style="display:none" onclick="showTab('employees',this)">👥 Employees</button>
+  <button class="tab admin-only" style="display:none" onclick="showTab('settings',this)">⚙️ Email Settings</button>
+</div>
+
+<div class="main">
+
+  <!-- CALENDAR -->
+  <div id="tab-calendar" class="page active">
+    <div class="stat-grid" id="calStats"></div>
+    <div class="cal-nav">
+      <button class="nav-btn" onclick="changeCalMonth(-1)">‹</button>
+      <div class="cal-title" id="calTitle"></div>
+      <button class="nav-btn" onclick="changeCalMonth(1)">›</button>
+    </div>
+    <div class="cal-wrap">
+      <div class="cal-head">
+        <div class="cal-dow">MON</div><div class="cal-dow">TUE</div><div class="cal-dow">WED</div>
+        <div class="cal-dow">THU</div><div class="cal-dow">FRI</div>
+        <div class="cal-dow sat">SAT</div><div class="cal-dow sun">SUN</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+  <!-- REQUEST LEAVE -->
+  <div id="tab-apply" class="page">
+    <div class="card">
+      <div class="card-title">✍️ Leave Request Form</div>
+      <div class="form-grid">
+        <div><div class="form-label">Employee Name *</div><input class="form-input" id="ap-name" placeholder="Your full name" oninput="updateDays()"/></div>
+        <div><div class="form-label">Department</div><input class="form-input" id="ap-dept" placeholder="Your department"/></div>
+      </div>
+      <div class="form-grid three">
+        <div>
+          <div class="form-label">Leave Type *</div>
+          <select class="form-select" id="ap-type" onchange="updateDays()">
+            <option value="Annual Leave">Annual Leave</option>
+            <option value="Half Day (AM)">Half Day (AM)</option>
+            <option value="Half Day (PM)">Half Day (PM)</option>
+            <option value="Sick Leave">Sick Leave</option>
+            <option value="Special Leave">Special Leave</option>
+          </select>
+        </div>
+        <div><div class="form-label">Start Date *</div><input class="form-input" type="date" id="ap-start" onchange="updateDays()"/></div>
+        <div><div class="form-label">End Date *</div><input class="form-input" type="date" id="ap-end" onchange="updateDays()"/></div>
+      </div>
+      <div class="form-grid">
+        <div>
+          <div class="form-label">Days Requested</div>
+          <input class="form-input" id="ap-days" readonly style="background:var(--bg);font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace"/>
+          <div class="form-hint" id="ap-hint"></div>
+        </div>
+        <div><div class="form-label">Reason (Optional)</div><input class="form-input" id="ap-reason" placeholder="Brief reason for leave"/></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="applyLeave()">📨 Submit Request</button>
+        <span id="emailBadge" style="font-size:12px;color:var(--text-sub)">* Approval notification will be sent to ytkang@jnfgroup.net</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY STATUS -->
+  <div id="tab-mylist" class="page">
+    <div class="card" style="margin-bottom:16px">
+      <div class="form-grid" style="margin-bottom:0">
+        <div><div class="form-label">Search by Name</div><input class="form-input" id="search-name" placeholder="Enter your name to view status" oninput="renderMyList()"/></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn btn-secondary" onclick="renderMyList()">🔍 Search</button></div>
+      </div>
+    </div>
+    <div id="myInfo" style="display:none;margin-bottom:16px"><div class="stat-grid" id="myStats"></div></div>
+    <div class="card">
+      <div class="card-title">📋 My Leave History</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="myBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROVE -->
+  <div id="tab-approve" class="page">
+    <div class="card">
+      <div class="card-title">⏳ Pending Requests</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>Period</th><th>Days</th><th>Reason</th><th>Submitted</th><th>Action</th></tr></thead>
+        <tbody id="approveBody"></tbody></table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 All Leave Records</div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>Period</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="allBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPLOYEES -->
+  <div id="tab-employees" class="page">
+    <div class="card" style="max-width:520px;margin-bottom:20px">
+      <div class="card-title">👤 Add New Employee</div>
+      <div class="form-grid">
+        <div><div class="form-label">Full Name *</div><input class="form-input" id="emp-name" placeholder="Employee name"/></div>
+        <div><div class="form-label">Department</div><input class="form-input" id="emp-dept" placeholder="Department"/></div>
+      </div>
+      <div class="form-grid">
+        <div><div class="form-label">Annual Leave Days *</div><input class="form-input" type="number" id="emp-total" placeholder="e.g. 15" min="0" max="99"/></div>
+        <div><div class="form-label">Start Date</div><input class="form-input" type="date" id="emp-join"/></div>
+      </div>
+      <button class="btn btn-primary" onclick="addEmployee()">+ Add Employee</button>
+    </div>
+    <div class="sec-hdr"><div class="sec-title">Employee List</div><div class="sec-line"></div></div>
+    <div class="emp-grid" id="empGrid"></div>
+  </div>
+
+  <!-- EMAIL SETTINGS -->
+  <div id="tab-settings" class="page">
+    <div class="card" style="max-width:580px">
+      <div class="card-title">⚙️ Email Notification Setup (EmailJS)</div>
+      <div class="info-box info-blue">
+        <b>📧 One-time setup required</b> — Once configured, employees will automatically notify <b>ytkang@jnfgroup.net</b> when submitting leave requests.
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Step 1 — Create Free EmailJS Account</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:2">
+          1. Go to <a href="https://www.emailjs.com" target="_blank" style="color:var(--accent);font-weight:600">emailjs.com</a> → <b>Sign Up Free</b><br>
+          2. <b>Email Services</b> → <b>Add New Service</b> → Select <b>Gmail</b><br>
+          3. Connect Gmail → Copy the <b>Service ID</b> (e.g. <code>service_abc123</code>)
+        </div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Step 2 — Create Email Template</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:2">
+          1. <b>Email Templates</b> → <b>Create New Template</b><br>
+          2. <b>To Email:</b> <code>ytkang@jnfgroup.net</code><br>
+          3. <b>Subject:</b> <code>[Leave Request] {{from_name}}</code><br>
+          4. <b>Content:</b> <code>{{message}}</code><br>
+          5. Save → Copy the <b>Template ID</b> (e.g. <code>template_xyz789</code>)
+        </div>
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Step 3 — Enter Your Keys Below</div>
+        <div class="form-grid one" style="margin-bottom:12px">
+          <div><div class="form-label">Public Key (Account → API Keys)</div><input class="form-input" id="ejs-pub" placeholder="Your EmailJS public key"/></div>
+        </div>
+        <div class="form-grid" style="margin-bottom:12px">
+          <div><div class="form-label">Service ID</div><input class="form-input" id="ejs-svc" placeholder="service_xxxxxxx"/></div>
+          <div><div class="form-label">Template ID</div><input class="form-input" id="ejs-tpl" placeholder="template_xxxxxxx"/></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="saveEmail()">💾 Save Settings</button>
+          <button class="btn btn-secondary" onclick="testEmail()">📧 Send Test Email</button>
+        </div>
+      </div>
+      <div class="info-box info-green">✅ <b>Free plan:</b> 200 emails/month — Sufficient for a team of up to 20 people.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Password Modal -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-hdr"><div class="modal-title">🔑 Admin Login</div></div>
+    <div class="modal-body">
+      <div class="form-label" style="margin-bottom:8px">Enter Admin Password</div>
+      <input class="form-input" type="password" id="pwInput" placeholder="Password"
+        onkeydown="if(event.key==='Enter')confirmPw()" style="margin-bottom:8px"/>
+      <div id="pwErr" style="display:none;color:var(--red);font-size:12px;font-weight:600">❌ Incorrect password. Please try again.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="cancelPw()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmPw()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- Day Detail Modal -->
+<div class="modal-overlay" id="dayModal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="dayModalTitle"></div>
+      <button class="modal-close" onclick="document.getElementById('dayModal').classList.remove('show')">×</button>
+    </div>
+    <div class="modal-body" id="dayModalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, push, update, remove }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBkY5IGIPC0CsJB55hui7wqCffcCiS33NI",
+  authDomain:"jnfam-task-plan.firebaseapp.com",
+  databaseURL:"https://jnfam-task-plan-default-rtdb.firebaseio.com",
+  projectId:"jnfam-task-plan",
+  storageBucket:"jnfam-task-plan.firebasestorage.app",
+  messagingSenderId:"76859256151",
+  appId:"1:76859256151:web:c056fd641305780908e212",
+};
+const db = getDatabase(initializeApp(firebaseConfig));
+
+// ── State ─────────────────────────────────────────
+let leaves={}, employees={}, curMode='emp';
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+const today=new Date(); today.setHours(0,0,0,0);
+const ADMIN_PW = 'jnfam2026';
+const ADMIN_EMAIL = 'ytkang@jnfgroup.net';
+
+// EmailJS config (localStorage)
+let ejsPub = localStorage.getItem('ejs_pub')||'';
+let ejsSvc = localStorage.getItem('ejs_svc')||'';
+let ejsTpl = localStorage.getItem('ejs_tpl')||'';
+if(ejsPub){ emailjs.init(ejsPub); document.getElementById('ejs-pub').value=ejsPub; }
+if(ejsSvc) document.getElementById('ejs-svc').value=ejsSvc;
+if(ejsTpl) document.getElementById('ejs-tpl').value=ejsTpl;
+
+// ── Firebase ──────────────────────────────────────
+function setSS(s){ const d=document.getElementById('syncDot'),t=document.getElementById('syncText'); d.className='sync-dot'+(s==='on'?' on':s==='ing'?' ing':''); t.textContent=s==='on'?'Live Sync Active':s==='ing'?'Processing...':'Disconnected'; }
+onValue(ref(db,'leaves'),  snap=>{ leaves=snap.val()||{};    setSS('on'); renderCalendar(); renderApprove(); renderMyList(); }, ()=>setSS(''));
+onValue(ref(db,'employees'),snap=>{ employees=snap.val()||{}; renderEmployees(); renderCalStats(); renderMyList(); });
+
+// ── Toast ─────────────────────────────────────────
+function toast(msg,type='ok'){ const t=document.getElementById('toast'); t.textContent=msg; t.className=`toast ${type} show`; setTimeout(()=>t.className='toast',3000); }
+
+// ── Admin ─────────────────────────────────────────
+let _pendBtn=null;
+window.setMode=(m,btn)=>{
+  if(m==='admin'){ _pendBtn=btn; document.getElementById('pwModal').classList.add('show'); document.getElementById('pwInput').value=''; document.getElementById('pwErr').style.display='none'; setTimeout(()=>document.getElementById('pwInput').focus(),100); return; }
+  curMode='emp'; document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.admin-only').forEach(el=>el.style.display='none');
+  showTab('calendar',document.querySelector('.tab'));
+};
+window.confirmPw=()=>{
+  if(document.getElementById('pwInput').value===ADMIN_PW){
+    curMode='admin'; document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); if(_pendBtn)_pendBtn.classList.add('active');
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='block');
+    document.getElementById('pwModal').classList.remove('show');
+    showTab('approve',document.querySelectorAll('.tab')[3]); toast('🔑 Admin mode activated','info');
+  } else { document.getElementById('pwErr').style.display='block'; document.getElementById('pwInput').value=''; document.getElementById('pwInput').focus(); }
+};
+window.cancelPw=()=>document.getElementById('pwModal').classList.remove('show');
+
+// ── Tab ───────────────────────────────────────────
+window.showTab=(name,btn)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active'); btn.classList.add('active');
+  if(name==='approve') renderApprove();
+  if(name==='employees') renderEmployees();
+  if(name==='mylist') renderMyList();
+  if(name==='calendar') renderCalendar();
+};
+
+// ── Email ─────────────────────────────────────────
+window.saveEmail=()=>{
+  ejsPub=document.getElementById('ejs-pub').value.trim();
+  ejsSvc=document.getElementById('ejs-svc').value.trim();
+  ejsTpl=document.getElementById('ejs-tpl').value.trim();
+  if(!ejsPub||!ejsSvc||!ejsTpl){ toast('Please fill all fields','err'); return; }
+  localStorage.setItem('ejs_pub',ejsPub); localStorage.setItem('ejs_svc',ejsSvc); localStorage.setItem('ejs_tpl',ejsTpl);
+  emailjs.init(ejsPub); toast('✅ Email settings saved!');
+};
+window.testEmail=async()=>{
+  if(!ejsPub){ toast('Save EmailJS settings first','err'); return; }
+  toast('📧 Sending test email...','info');
+  try{
+    await emailjs.send(ejsSvc,ejsTpl,{ from_name:'JNFAM Leave System', to_email:ADMIN_EMAIL, leave_type:'Test', message:'This is a test from JNFAM Leave Management. Email notifications are working!' });
+    toast('✅ Test email sent to '+ADMIN_EMAIL);
+  }catch(e){ toast('❌ Email failed: '+JSON.stringify(e),'err'); }
+};
+async function sendEmail(data){
+  if(!ejsPub||!ejsSvc||!ejsTpl) return;
+  try{
+    await emailjs.send(ejsSvc,ejsTpl,{
+      from_name:`${data.name} via JNFAM Leave System`,
+      to_email: ADMIN_EMAIL,
+      leave_type: data.type,
+      message:`New Leave Request\n\nEmployee: ${data.name}\nDepartment: ${data.dept||'N/A'}\nType: ${data.type}\nFrom: ${data.start}\nTo: ${data.end||data.start}\nDays: ${data.days}\nReason: ${data.reason||'Not specified'}\nSubmitted: ${new Date().toLocaleString('en-US')}\n\nApprove at: https://yt9495.github.io/JNFAM-Task-Plan/leave.html`
+    });
+    toast('✅ Notification sent to approver');
+  }catch(e){ console.warn('Email error',e); }
+}
+
+// ── Utils ─────────────────────────────────────────
+function workDays(s,e){ let c=0,d=new Date(s+'T00:00:00'),E=new Date(e+'T00:00:00'); while(d<=E){const w=d.getDay();if(w!==0&&w!==6)c++;d.setDate(d.getDate()+1);}return c; }
+function fmtD(s){ if(!s)return''; return new Date(s+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
+function calcApproved(n){ return Object.values(leaves).filter(l=>l.name===n&&l.status==='Approved').reduce((s,l)=>s+(Number(l.days)||0),0); }
+function calcPending(n){  return Object.values(leaves).filter(l=>l.name===n&&l.status==='Pending').reduce((s,l)=>s+(Number(l.days)||0),0); }
+function getEmp(n){ return Object.values(employees).find(e=>e.name===n); }
+function tClass(t){ return t.includes('Half')?'t-half':t==='Sick Leave'?'t-sick':t==='Special Leave'?'t-special':'t-annual'; }
+
+// ── Days Update ───────────────────────────────────
+window.updateDays=()=>{
+  const type=document.getElementById('ap-type').value;
+  const s=document.getElementById('ap-start').value;
+  const e=document.getElementById('ap-end').value;
+  const dEl=document.getElementById('ap-days');
+  const hEl=document.getElementById('ap-hint');
+  if(!s){dEl.value='';return;}
+  let days=type.includes('Half')?0.5:(s&&e&&e>=s?workDays(s,e):0);
+  dEl.value=days?`${days} working day(s)`:'';
+  const name=document.getElementById('ap-name').value.trim();
+  const emp=getEmp(name);
+  if(emp&&days){
+    const total=Number(emp.totalDays)||0;
+    const remain=total-calcApproved(name)-calcPending(name);
+    hEl.textContent=`Balance: ${remain} day(s) remaining | Requesting: ${days} day(s)`;
+    hEl.style.color=remain>=days?'var(--green)':'var(--red)';
+  } else hEl.textContent='';
+};
+
+// ── Apply ─────────────────────────────────────────
+window.applyLeave=async()=>{
+  const name=document.getElementById('ap-name').value.trim();
+  const dept=document.getElementById('ap-dept').value.trim();
+  const type=document.getElementById('ap-type').value;
+  const s=document.getElementById('ap-start').value;
+  const e=document.getElementById('ap-end').value||s;
+  const reason=document.getElementById('ap-reason').value.trim();
+  if(!name||!s){toast('Please enter your name and start date','err');return;}
+  const days=type.includes('Half')?0.5:workDays(s,e);
+  if(!days){toast('Please enter valid dates','err');return;}
+  const emp=getEmp(name);
+  if(emp){
+    const remain=Number(emp.totalDays||0)-calcApproved(name)-calcPending(name);
+    if(days>remain){toast(`Insufficient balance (${remain} day(s) remaining)`,'err');return;}
+  }
+  setSS('ing');
+  const data={name,dept,type,start:s,end:e,days,reason,status:'Pending',appliedAt:new Date().toISOString()};
+  await push(ref(db,'leaves'),data);
+  setSS('on'); toast('✅ Leave request submitted!');
+  sendEmail(data);
+  ['ap-name','ap-start','ap-end','ap-reason','ap-days'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ap-hint').textContent='';
+  showTab('mylist',document.querySelectorAll('.tab')[2]);
+  document.getElementById('search-name').value=name; renderMyList();
+};
+
+// ── Approve/Reject ────────────────────────────────
+window.approveLeave=async(k,a)=>{ setSS('ing'); await update(ref(db,`leaves/${k}`),{status:a==='ok'?'Approved':'Rejected',processedAt:new Date().toISOString()}); setSS('on'); toast(a==='ok'?'✅ Approved':'❌ Rejected',a==='ok'?'ok':'err'); };
+window.cancelLeave=async(k)=>{ if(!confirm('Cancel this leave request?'))return; setSS('ing'); await update(ref(db,`leaves/${k}`),{status:'Cancelled'}); setSS('on'); toast('Leave request cancelled'); };
+
+// ── Calendar ──────────────────────────────────────
+window.changeCalMonth=d=>{ calMonth+=d; if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
+function renderCalStats(){
+  const w=Object.values(leaves).filter(l=>l.status==='Pending').length;
+  const a=Object.values(leaves).filter(l=>l.status==='Approved').length;
+  const ec=Object.keys(employees).length, tc=Object.keys(leaves).length;
+  document.getElementById('calStats').innerHTML=`
+    <div class="stat-card"><div class="stat-lbl">Employees</div><div class="stat-val">${ec}</div><div class="stat-sub">registered</div></div>
+    <div class="stat-card y"><div class="stat-lbl">Pending</div><div class="stat-val">${w}</div><div class="stat-sub">awaiting approval</div></div>
+    <div class="stat-card g"><div class="stat-lbl">Approved</div><div class="stat-val">${a}</div><div class="stat-sub">requests</div></div>
+    <div class="stat-card"><div class="stat-lbl">Total Requests</div><div class="stat-val">${tc}</div><div class="stat-sub">all time</div></div>`;
+}
+function renderCalendar(){
+  renderCalStats();
+  const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent=`${MO[calMonth]} ${calYear}`;
+  const first=new Date(calYear,calMonth,1);
+  let sd=first.getDay(); sd=sd===0?6:sd-1;
+  const cs=new Date(first); cs.setDate(cs.getDate()-sd);
+  const byDate={};
+  Object.entries(leaves).forEach(([k,l])=>{
+    if(l.status==='Cancelled'||l.status==='Rejected')return;
+    let c=new Date(l.start+'T00:00:00'), E=new Date((l.end||l.start)+'T00:00:00');
+    while(c<=E){ const ds=c.toISOString().slice(0,10); if(!byDate[ds])byDate[ds]=[]; byDate[ds].push({...l,_key:k}); c.setDate(c.getDate()+1); }
+  });
+  const grid=document.getElementById('calGrid'); grid.innerHTML='';
+  for(let i=0;i<42;i++){
+    const d=new Date(cs); d.setDate(d.getDate()+i);
+    const inM=d.getMonth()===calMonth&&d.getFullYear()===calYear;
+    const isT=d.getTime()===today.getTime();
+    const dow=d.getDay(); const ds=d.toISOString().slice(0,10);
+    const dl=byDate[ds]||[];
+    let cls='cal-day'; if(!inM)cls+=' other'; if(isT)cls+=' today'; if(dow===6)cls+=' sat'; if(dow===0)cls+=' sun';
+    const chips=dl.slice(0,3).map(l=>`<span class="lchip ${l.status==='Approved'?'lchip-ok':'lchip-wait'}">${l.name}</span>`).join('');
+    const more=dl.length>3?`<div style="font-size:9px;color:var(--text-sub)">+${dl.length-3} more</div>`:'';
+    const cell=document.createElement('div'); cell.className=cls;
+    cell.innerHTML=`<div class="day-num"><span>${d.getDate()}</span>${isT?'<div class="today-dot"></div>':''}</div>${chips}${more}`;
+    if(inM&&dl.length) cell.onclick=()=>openDayModal(ds,dl);
+    grid.appendChild(cell);
+  }
+}
+function openDayModal(ds,dl){
+  const d=new Date(ds+'T00:00:00');
+  document.getElementById('dayModalTitle').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('dayModalBody').innerHTML=dl.map(l=>`
+    <div style="background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-weight:700">${l.name}</span>
+        <span class="badge ${l.status==='Approved'?'b-ok':l.status==='Pending'?'b-wait':'b-no'}">${l.status}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-dim)">${l.dept?l.dept+' · ':''}<span class="type-chip ${tClass(l.type)}">${l.type}</span> · ${l.days} day(s)${l.reason?' · '+l.reason:''}</div>
+    </div>`).join('');
+  document.getElementById('dayModal').classList.add('show');
+}
+
+// ── My List ───────────────────────────────────────
+window.renderMyList=()=>{
+  const name=document.getElementById('search-name').value.trim();
+  const body=document.getElementById('myBody');
+  const info=document.getElementById('myInfo');
+  if(!name){ body.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-sub);padding:24px">Enter your name to view your leave status</td></tr>'; info.style.display='none'; return; }
+  const my=Object.entries(leaves).filter(([,l])=>l.name===name).sort((a,b)=>(b[1].appliedAt||'').localeCompare(a[1].appliedAt||''));
+  const emp=getEmp(name);
+  if(emp){
+    info.style.display='block';
+    const total=Number(emp.totalDays)||0, approved=calcApproved(name), pending=calcPending(name), remain=total-approved;
+    document.getElementById('myStats').innerHTML=`
+      <div class="stat-card"><div class="stat-lbl">Annual Entitlement</div><div class="stat-val">${total}</div><div class="stat-sub">days</div></div>
+      <div class="stat-card g"><div class="stat-lbl">Used (Approved)</div><div class="stat-val">${approved}</div><div class="stat-sub">days</div></div>
+      <div class="stat-card y"><div class="stat-lbl">Pending</div><div class="stat-val">${pending}</div><div class="stat-sub">days</div></div>
+      <div class="stat-card ${remain<=3?'r':''}"><div class="stat-lbl">Remaining</div><div class="stat-val">${remain}</div><div class="stat-sub">days left</div></div>`;
+  } else info.style.display='none';
+  body.innerHTML=!my.length?'<tr><td colspan="8" style="text-align:center;color:var(--text-sub);padding:24px">No leave requests found</td></tr>'
+    :my.map(([k,l])=>`<tr>
+      <td><span class="type-chip ${tClass(l.type)}">${l.type}</span></td>
+      <td>${fmtD(l.start)}</td><td>${fmtD(l.end||l.start)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-weight:700">${l.days}</td>
+      <td style="color:var(--text-dim)">${l.reason||'-'}</td>
+      <td style="font-size:11px;color:var(--text-sub)">${l.appliedAt?new Date(l.appliedAt).toLocaleDateString('en-US'):'-'}</td>
+      <td><span class="badge ${l.status==='Approved'?'b-ok':l.status==='Pending'?'b-wait':l.status==='Rejected'?'b-no':'b-cancel'}">${l.status}</span></td>
+      <td>${l.status==='Pending'?`<button class="btn btn-danger btn-sm" onclick="cancelLeave('${k}')">Cancel</button>`:'-'}</td>
+    </tr>`).join('');
+};
+
+// ── Approve List ──────────────────────────────────
+function renderApprove(){
+  const pend=Object.entries(leaves).filter(([,l])=>l.status==='Pending').sort((a,b)=>(a[1].appliedAt||'').localeCompare(b[1].appliedAt||''));
+  document.getElementById('approveBody').innerHTML=!pend.length
+    ?'<tr><td colspan="8" style="text-align:center;color:var(--text-sub);padding:24px">✅ No pending requests</td></tr>'
+    :pend.map(([k,l])=>`<tr>
+      <td style="font-weight:700">${l.name}</td>
+      <td style="color:var(--text-dim)">${l.dept||'-'}</td>
+      <td><span class="type-chip ${tClass(l.type)}">${l.type}</span></td>
+      <td style="font-size:12px">${fmtD(l.start)}${l.end&&l.end!==l.start?' – '+fmtD(l.end):''}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-weight:700">${l.days}</td>
+      <td style="color:var(--text-dim)">${l.reason||'-'}</td>
+      <td style="font-size:11px;color:var(--text-sub)">${l.appliedAt?new Date(l.appliedAt).toLocaleDateString('en-US'):'-'}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn btn-success btn-sm" onclick="approveLeave('${k}','ok')">✅ Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="approveLeave('${k}','no')">❌ Reject</button>
+      </td></tr>`).join('');
+  const all=Object.entries(leaves).sort((a,b)=>(b[1].appliedAt||'').localeCompare(a[1].appliedAt||''));
+  document.getElementById('allBody').innerHTML=!all.length
+    ?'<tr><td colspan="7" style="text-align:center;color:var(--text-sub);padding:24px">No records</td></tr>'
+    :all.map(([k,l])=>`<tr>
+      <td style="font-weight:700">${l.name}</td><td style="color:var(--text-dim)">${l.dept||'-'}</td>
+      <td><span class="type-chip ${tClass(l.type)}">${l.type}</span></td>
+      <td style="font-size:12px">${fmtD(l.start)}${l.end&&l.end!==l.start?' – '+fmtD(l.end):''}</td>
+      <td>${l.days}</td>
+      <td><span class="badge ${l.status==='Approved'?'b-ok':l.status==='Pending'?'b-wait':l.status==='Rejected'?'b-no':'b-cancel'}">${l.status}</span></td>
+      <td>${l.status==='Pending'?`<button class="btn btn-danger btn-sm" onclick="cancelLeave('${k}')">Delete</button>`:'-'}</td>
+    </tr>`).join('');
+}
+
+// ── Employees ─────────────────────────────────────
+window.addEmployee=async()=>{
+  const name=document.getElementById('emp-name').value.trim();
+  const dept=document.getElementById('emp-dept').value.trim();
+  const total=document.getElementById('emp-total').value;
+  const join=document.getElementById('emp-join').value;
+  if(!name||!total){toast('Please enter name and annual leave days','err');return;}
+  if(Object.values(employees).find(e=>e.name===name)){toast('Employee already exists','err');return;}
+  setSS('ing'); await push(ref(db,'employees'),{name,dept,totalDays:Number(total),joinDate:join,createdAt:new Date().toISOString()}); setSS('on');
+  toast(`✅ ${name} added!`);
+  ['emp-name','emp-dept','emp-total','emp-join'].forEach(id=>document.getElementById(id).value='');
+};
+window.deleteEmployee=async(k,name)=>{ if(!confirm(`Remove ${name}?`))return; setSS('ing'); await remove(ref(db,`employees/${k}`)); setSS('on'); toast(`${name} removed`); };
+window.editDays=async(k,name,cur)=>{
+  const v=prompt(`Update annual leave for ${name} (current: ${cur})`,cur);
+  if(v===null)return; const n=Number(v);
+  if(isNaN(n)||n<0){toast('Invalid number','err');return;}
+  setSS('ing'); await update(ref(db,`employees/${k}`),{totalDays:n}); setSS('on');
+  toast(`✅ Updated to ${n} days`);
+};
+function renderEmployees(){
+  const list=Object.entries(employees);
+  const grid=document.getElementById('empGrid');
+  if(!list.length){grid.innerHTML='<div style="color:var(--text-sub);padding:20px">No employees registered yet</div>';return;}
+  grid.innerHTML=list.map(([k,e])=>{
+    const total=Number(e.totalDays)||0, approved=calcApproved(e.name), remain=total-approved;
+    const pct=total?Math.round(approved/total*100):0;
+    return `<div class="emp-card">
+      <div class="emp-name">${e.name}</div>
+      <div class="emp-sub">${e.dept||'No dept'}${e.joinDate?' · '+e.joinDate:''}</div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-sub);margin-bottom:4px">
+        <span>Total <b style="color:var(--accent)">${total}</b>d</span>
+        <span>Used <b style="color:var(--green)">${approved}</b>d</span>
+        <span>Left <b style="color:${remain<=3?'var(--red)':'var(--text)'}">${remain}</b>d</span>
+      </div>
+      <div class="leave-bar"><div class="leave-fill" style="width:${pct}%;background:${remain<=3?'var(--red)':'var(--green)'}"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-sub);margin-top:2px"><span>${pct}% used</span><span style="color:${remain<=3?'var(--red)':'inherit'}">${remain}d left</span></div>
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <button class="btn btn-secondary btn-sm" onclick="editDays('${k}','${e.name}',${total})">✏️ Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEmployee('${k}','${e.name}')">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+renderCalendar();
+</script>
+</body>
+</html>
