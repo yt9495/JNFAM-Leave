@@ -362,6 +362,9 @@ const firebaseConfig = {
 };
 const db = getDatabase(initializeApp(firebaseConfig));
 
+// Initialize EmailJS immediately with default keys
+emailjs.init('VkhnX-Dm2AWclDpYQ');
+
 // ── State ─────────────────────────────────────────
 let leaves={}, employees={}, curMode='emp';
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
@@ -370,9 +373,9 @@ const ADMIN_PW = 'jnfam2026';
 const ADMIN_EMAIL = 'ytkang@jnfgroup.net';
 
 // EmailJS config (localStorage)
-let ejsPub = localStorage.getItem('ejs_pub')||'';
-let ejsSvc = localStorage.getItem('ejs_svc')||'';
-let ejsTpl = localStorage.getItem('ejs_tpl')||'';
+let ejsPub = localStorage.getItem('ejs_pub')||'VkhnX-Dm2AWclDpYQ';
+let ejsSvc = localStorage.getItem('ejs_svc')||'service_fv2oa88';
+let ejsTpl = localStorage.getItem('ejs_tpl')||'template_tmztzep';
 if(ejsPub){ emailjs.init(ejsPub); document.getElementById('ejs-pub').value=ejsPub; }
 if(ejsSvc) document.getElementById('ejs-svc').value=ejsSvc;
 if(ejsTpl) document.getElementById('ejs-tpl').value=ejsTpl;
