@@ -28,6 +28,9 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;}
 .badge-user{background:var(--accent);}
 .badge-admin{background:var(--orange);}
+.lang-toggle{display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:3px;gap:2px;}
+.lang-btn{padding:4px 11px;border-radius:16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:all .15s;font-family:'IBM Plex Mono',monospace;}
+.lang-btn.active{background:var(--accent);color:#fff;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
 .btn-p{background:var(--accent);color:#fff;}.btn-p:hover{background:#1d4ed8;}
 .btn-s{background:var(--green);color:#fff;}.btn-s:hover{background:#15803d;}
@@ -50,7 +53,7 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .cal-body{padding:20px 24px;}
 .cgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
 .cdh{text-align:center;font-size:12px;font-weight:700;color:var(--text3);padding:8px 0;}
-.cd{min-height:90px;border-radius:10px;padding:8px 10px;border:1px solid var(--border);background:var(--white);transition:all .15s;}
+.cd{min-height:90px;border-radius:10px;padding:8px 10px;border:1px solid var(--border);background:var(--white);}
 .cd.today{border-color:var(--accent);background:var(--accent-l);}
 .cd.holiday{background:#fef2f2;border-color:#fca5a5;}
 .cd.om{opacity:.35;background:var(--bg);}
@@ -66,8 +69,8 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .emp-chip-days{color:var(--text3);}
 .today-banner{background:linear-gradient(135deg,#2563eb,#1e40af);border-radius:12px;padding:16px 22px;margin-bottom:20px;color:#fff;display:flex;align-items:center;gap:14px;}
 .today-banner-icon{font-size:24px;}
-.today-banner-text{font-size:13px;}
 .today-banner-text strong{font-size:15px;display:block;margin-bottom:3px;}
+.today-banner-text span{font-size:13px;opacity:.85;}
 #login-modal{display:none;position:fixed;inset:0;background:rgba(30,37,51,.5);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
 #login-modal.open{display:flex;}
 .login-card{background:var(--white);border-radius:16px;padding:36px;width:100%;max-width:440px;margin:24px;box-shadow:var(--shadow-lg);position:relative;}
@@ -115,10 +118,10 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .li-meta{font-size:11px;color:var(--text2);}
 .li-act{display:flex;gap:6px;flex-shrink:0;align-items:center;}
 .sbadge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
-.s대기{background:var(--yellow-l);color:var(--yellow);}
-.s승인{background:var(--green-l);color:var(--green);}
-.s반려{background:var(--red-l);color:var(--red);}
-.s취소{background:var(--bg);color:var(--text3);border:1px solid var(--border);}
+.s대기,.sPending{background:var(--yellow-l);color:var(--yellow);}
+.s승인,.sApproved{background:var(--green-l);color:var(--green);}
+.s반려,.sRejected{background:var(--red-l);color:var(--red);}
+.s취소,.sCanceled{background:var(--bg);color:var(--text3);border:1px solid var(--border);}
 .etable{width:100%;border-collapse:collapse;font-size:13px;}
 .etable th{text-align:left;padding:9px 12px;font-size:11px;font-weight:700;color:var(--text3);border-bottom:1px solid var(--border);}
 .etable td{padding:10px 12px;border-bottom:1px solid var(--border);}
@@ -147,7 +150,11 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
     <div id="header-user" style="display:none" class="user-info">
       <span id="hd-name"></span>
       <span id="hd-badge"></span>
-      <button class="btn-logout" onclick="logout()">로그아웃</button>
+      <button class="btn-logout" id="btn-logout" onclick="logout()">로그아웃</button>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-ko" onclick="setLang('ko')">KO</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
     </div>
     <button class="btn btn-p" id="btn-login-open" onclick="openLoginModal()" style="font-size:13px;padding:7px 16px">🔐 로그인</button>
   </div>
@@ -157,13 +164,11 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
   <div id="today-banner" style="display:none" class="today-banner">
     <div class="today-banner-icon">🏖️</div>
     <div class="today-banner-text">
-      <strong id="today-banner-title"></strong>
-      <span id="today-banner-sub"></span>
+      <strong id="today-title"></strong>
+      <span id="today-sub"></span>
     </div>
   </div>
-
   <div class="emp-status-bar" id="emp-status-bar"></div>
-
   <div class="cal-wrap">
     <div class="cal-top">
       <div class="cal-top-left">
@@ -171,16 +176,16 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
           <button onclick="chMonth(-1)">◀</button>
           <button onclick="chMonth(1)">▶</button>
         </div>
-        <div class="cal-title" id="cal-title">불러오는 중...</div>
+        <div class="cal-title" id="cal-title"></div>
       </div>
       <div class="cal-legend">
         <div class="legend-item">
           <div class="legend-dot" style="background:#fef2f2;border:1px solid #fca5a5"></div>
-          <span>🇺🇸 미국 연방 공휴일</span>
+          <span id="legend-holiday">🇺🇸 미국 연방 공휴일</span>
         </div>
         <div class="legend-item">
           <div class="legend-dot" style="background:var(--accent-l);border:1px solid var(--accent)"></div>
-          <span>오늘</span>
+          <span id="legend-today">오늘</span>
         </div>
       </div>
     </div>
@@ -188,12 +193,11 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
       <div class="cgrid" id="cgrid">
         <div style="grid-column:1/-1;text-align:center;padding:40px">
           <div class="spinner"></div>
-          <div style="font-size:13px;color:var(--text3)">데이터 불러오는 중...</div>
+          <div id="loading-text" style="font-size:13px;color:var(--text3)">데이터 불러오는 중...</div>
         </div>
       </div>
     </div>
   </div>
-
   <div id="my-panel">
     <div class="tabs" id="tabs"></div>
     <div id="tab-content"></div>
@@ -203,17 +207,15 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 <div id="login-modal">
   <div class="login-card">
     <button class="modal-close" onclick="closeLoginModal()">✕</button>
-    <h2>로그인</h2>
-    <p class="sub">이름을 선택하면 바로 입장해요</p>
+    <h2 id="login-title">로그인</h2>
+    <p class="sub" id="login-sub">이름을 선택하면 바로 입장해요</p>
     <div class="emp-grid" id="emp-grid">
-      <div style="grid-column:1/-1;text-align:center;padding:20px">
-        <div class="spinner"></div>
-      </div>
+      <div style="grid-column:1/-1;text-align:center;padding:20px"><div class="spinner"></div></div>
     </div>
-    <div class="divider">관리자 로그인</div>
+    <div class="divider" id="login-divider">관리자 로그인</div>
     <div class="admin-row">
-      <input type="password" id="admin-pw" placeholder="관리자 비밀번호" onkeydown="if(event.key==='Enter')adminLogin()">
-      <button class="btn btn-o" onclick="adminLogin()">입장</button>
+      <input type="password" id="admin-pw" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn btn-o" id="btn-admin-enter" onclick="adminLogin()">입장</button>
     </div>
     <div id="login-err" style="color:var(--red);font-size:12px;margin-top:8px;text-align:center"></div>
   </div>
@@ -221,17 +223,17 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 
 <div id="modal-wrap">
   <div class="modal">
-    <h3>휴가 처리</h3>
+    <h3 id="process-title">휴가 처리</h3>
     <div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px;" id="modal-info"></div>
     <input type="hidden" id="modal-id">
     <div class="fg">
-      <label>처리 메모 (선택)</label>
-      <textarea id="modal-note" placeholder="반려 사유 등"></textarea>
+      <label id="modal-memo-label">처리 메모 (선택)</label>
+      <textarea id="modal-note"></textarea>
     </div>
     <div class="modal-act">
-      <button class="btn btn-o" onclick="closeModal()">취소</button>
-      <button class="btn btn-d" onclick="doProcess('반려')">반려</button>
-      <button class="btn btn-s" onclick="doProcess('승인')">승인</button>
+      <button class="btn btn-o" id="btn-modal-cancel" onclick="closeModal()">취소</button>
+      <button class="btn btn-d" id="btn-modal-reject" onclick="doProcess('반려')">반려</button>
+      <button class="btn btn-s" id="btn-modal-approve" onclick="doProcess('승인')">승인</button>
     </div>
   </div>
 </div>
@@ -243,263 +245,298 @@ const API='https://script.google.com/macros/s/AKfycbyRdAFyS4zhClmX6dLiAAQ9HTrq1P
 const COLORS=['#2563eb','#16a34a','#7c3aed','#ea580c','#dc2626','#0891b2','#d97706','#be185d'];
 const LIGHT={'#2563eb':'#eff4ff','#16a34a':'#f0fdf4','#7c3aed':'#f5f3ff','#ea580c':'#fff7ed','#dc2626':'#fef2f2','#0891b2':'#ecfeff','#d97706':'#fffbeb','#be185d':'#fdf2f8'};
 
+let lang=localStorage.getItem('jnfam_lang')||'ko';
 let me=null,isAdmin=false,employees=[],leaves=[],settings={};
 let calY=new Date().getFullYear(),calM=new Date().getMonth(),activeTab=0,ec={};
+let federalHolidays={};
 
-// ── 미국 연방 공휴일 직접 계산 ───────────────
-// API 대신 직접 계산 → 주(State) 공휴일 완전 제거
-var federalHolidays = {};
-
-function getNthWeekday(year, month, weekday, n) {
-  // n번째 weekday (0=일,1=월...6=토) 구하기
-  var d = new Date(year, month, 1);
-  var count = 0;
-  while (d.getMonth() === month) {
-    if (d.getDay() === weekday) {
-      count++;
-      if (count === n) return new Date(d);
-    }
-    d.setDate(d.getDate() + 1);
+// ── 다국어 ────────────────────────────────────
+const T={
+  ko:{
+    login:'🔐 로그인', logout:'로그아웃',
+    loginTitle:'로그인', loginSub:'이름을 선택하면 바로 입장해요',
+    adminLogin:'관리자 로그인', adminEnter:'입장',
+    adminPwPlaceholder:'관리자 비밀번호',
+    legendHoliday:'🇺🇸 미국 연방 공휴일', legendToday:'오늘',
+    loading:'데이터 불러오는 중...',
+    todayOn:'오늘 휴가 중: ', todayPeople:'명이 휴가 중입니다',
+    remainDays:'잔여', days:'일',
+    tabPending:'📋 승인 대기', tabAll:'📅 전체 내역', tabEmps:'👥 직원 현황',
+    tabApply:'✉️ 휴가 신청', tabMine:'📋 내 내역',
+    applyTitle:'✉️ 휴가 신청', applyNote:'🇺🇸 미국 연방 공휴일·주말 자동 제외',
+    leaveType:'휴가 종류', startDate:'시작일', endDate:'종료일',
+    calcDays:'계산된 영업일', reason:'사유', reasonPh:'사유 입력 (선택)',
+    applyBtn:'신청하기',
+    types:['연차','반차(오전)','반차(오후)','병가','기타'],
+    typeVals:['annual','half-am','half-pm','sick','other'],
+    daysResult:(d,h)=>'📅 총 '+d+'일 (영업일 기준)'+(h>0?' · 연방 공휴일 '+h+'일 제외':''),
+    selectDate:'날짜를 선택하면 자동 계산됩니다',
+    selectEnd:'종료일을 선택해주세요',
+    errEndDate:'❌ 종료일이 시작일보다 빠릅니다',
+    errNoWorkday:'❌ 선택한 기간에 영업일이 없어요',
+    errStart:'❌ 시작일을 입력해주세요',
+    halfDay:'0.5일 (반차)',
+    myLeaves:'📋 내 신청 내역', noLeaves:'신청 내역이 없어요',
+    pendingTitle:'📋 승인 대기', noPending:'대기 중인 신청이 없어요',
+    allTitle:'📅 전체 내역', noAll:'신청 내역이 없어요',
+    empTitle:'👥 직원 연차 현황',
+    colName:'직원명', colTotal:'총 연차', colUsed:'사용', colRemain:'잔여', colRate:'사용률',
+    statTotal:'총 연차', statUsed:'사용', statRemain:'잔여', statPending:'대기중',
+    applySuccess:'✅ 휴가 신청이 완료됐어요!', applyFail:'❌ 신청 실패',
+    processTitle:'휴가 처리', memoLabel:'처리 메모 (선택)', memoPh:'반려 사유 등',
+    cancel:'취소', reject:'반려', approve:'승인',
+    approved:'✅ 승인됐어요', rejected:'❌ 반려됐어요', processFail:'❌ 처리 실패',
+    cancelConfirm:'이 신청을 취소할까요?', cancelOk:'✅ 취소됐어요',
+    pwWrong:'❌ 비밀번호가 틀렸습니다', errData:'데이터를 불러오지 못했어요. 새로고침 해주세요.',
+    statusMap:{'대기':'대기','승인':'승인','반려':'반려','취소':'취소'},
+    apply:'신청', applied:'신청: ', processed:'처리: ',
+    calDays:['월','화','수','목','금'],
+    calTitle:(y,m)=>y+'년 '+m+'월',
+    adminBadge:'👑 관리자', userBadge:'직원',
+  },
+  en:{
+    login:'🔐 Login', logout:'Logout',
+    loginTitle:'Login', loginSub:'Select your name to enter',
+    adminLogin:'Admin Login', adminEnter:'Enter',
+    adminPwPlaceholder:'Admin Password',
+    legendHoliday:'🇺🇸 US Federal Holiday', legendToday:'Today',
+    loading:'Loading data...',
+    todayOn:'On Leave Today: ', todayPeople:' member(s) on leave',
+    remainDays:'Remaining', days:' days',
+    tabPending:'📋 Pending', tabAll:'📅 All Records', tabEmps:'👥 Staff Status',
+    tabApply:'✉️ Apply Leave', tabMine:'📋 My Leaves',
+    applyTitle:'✉️ Apply for Leave', applyNote:'🇺🇸 US Federal Holidays & Weekends excluded',
+    leaveType:'Leave Type', startDate:'Start Date', endDate:'End Date',
+    calcDays:'Business Days', reason:'Reason', reasonPh:'Enter reason (optional)',
+    applyBtn:'Submit',
+    types:['Annual Leave','Half Day (AM)','Half Day (PM)','Sick Leave','Other'],
+    typeVals:['annual','half-am','half-pm','sick','other'],
+    daysResult:(d,h)=>'📅 '+d+' business day(s)'+(h>0?' · '+h+' holiday(s) excluded':''),
+    selectDate:'Select dates to calculate',
+    selectEnd:'Please select end date',
+    errEndDate:'❌ End date is before start date',
+    errNoWorkday:'❌ No business days in selected period',
+    errStart:'❌ Please select a start date',
+    halfDay:'0.5 day (Half Day)',
+    myLeaves:'📋 My Leave Records', noLeaves:'No leave records',
+    pendingTitle:'📋 Pending Approval', noPending:'No pending requests',
+    allTitle:'📅 All Records', noAll:'No records found',
+    empTitle:'👥 Staff Leave Status',
+    colName:'Name', colTotal:'Total', colUsed:'Used', colRemain:'Remaining', colRate:'Usage',
+    statTotal:'Total Leave', statUsed:'Used', statRemain:'Remaining', statPending:'Pending',
+    applySuccess:'✅ Leave request submitted!', applyFail:'❌ Submission failed',
+    processTitle:'Process Leave', memoLabel:'Memo (optional)', memoPh:'Reason for rejection, etc.',
+    cancel:'Cancel', reject:'Reject', approve:'Approve',
+    approved:'✅ Approved', rejected:'❌ Rejected', processFail:'❌ Processing failed',
+    cancelConfirm:'Cancel this request?', cancelOk:'✅ Request cancelled',
+    pwWrong:'❌ Incorrect password', errData:'Failed to load data. Please refresh.',
+    statusMap:{'대기':'Pending','승인':'Approved','반려':'Rejected','취소':'Cancelled'},
+    apply:'Applied', applied:'Applied: ', processed:'Processed: ',
+    calDays:['Mon','Tue','Wed','Thu','Fri'],
+    calTitle:(y,m)=>['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m]+' '+y,
+    adminBadge:'👑 Admin', userBadge:'Staff',
   }
+};
+
+function t(k,a,b){ const v=T[lang][k]; return typeof v==='function'?v(a,b):(v||k); }
+
+function setLang(l){
+  lang=l;
+  localStorage.setItem('jnfam_lang',l);
+  document.getElementById('btn-ko').classList.toggle('active',l==='ko');
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  applyLang();
+  renderCal();
+  renderEmpStatusBar();
+  renderTodayBanner();
+  if(me){ renderMyTabs(); renderMyContent(); }
+}
+
+function applyLang(){
+  const s=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const p=(id,v)=>{const e=document.getElementById(id);if(e)e.placeholder=v;};
+  s('btn-login-open',t('login'));
+  s('btn-logout',t('logout'));
+  s('login-title',t('loginTitle'));
+  s('login-sub',t('loginSub'));
+  s('login-divider',t('adminLogin'));
+  s('btn-admin-enter',t('adminEnter'));
+  p('admin-pw',t('adminPwPlaceholder'));
+  s('legend-holiday',t('legendHoliday'));
+  s('legend-today',t('legendToday'));
+  s('loading-text',t('loading'));
+  s('process-title',t('processTitle'));
+  s('modal-memo-label',t('memoLabel'));
+  p('modal-note',t('memoPh'));
+  s('btn-modal-cancel',t('cancel'));
+  s('btn-modal-reject',t('reject'));
+  s('btn-modal-approve',t('approve'));
+}
+
+// ── 연방 공휴일 계산 ──────────────────────────
+function getNthWeekday(year,month,weekday,n){
+  var d=new Date(year,month,1),count=0;
+  while(d.getMonth()===month){if(d.getDay()===weekday){count++;if(count===n)return new Date(d);}d.setDate(d.getDate()+1);}
   return null;
 }
-
-function getLastWeekday(year, month, weekday) {
-  // 해당 월 마지막 weekday
-  var d = new Date(year, month + 1, 0); // 월 마지막날
-  while (d.getDay() !== weekday) d.setDate(d.getDate() - 1);
+function getLastWeekday(year,month,weekday){
+  var d=new Date(year,month+1,0);
+  while(d.getDay()!==weekday)d.setDate(d.getDate()-1);
   return new Date(d);
 }
-
-function observedDate(date) {
-  // 토요일이면 금요일, 일요일이면 월요일로 대체
-  var d = new Date(date);
-  if (d.getDay() === 6) d.setDate(d.getDate() - 1);
-  if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+function observedDate(date){
+  var d=new Date(date);
+  if(d.getDay()===6)d.setDate(d.getDate()-1);
+  if(d.getDay()===0)d.setDate(d.getDate()+1);
   return d;
 }
+function toYMDDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
-function toYMDDate(d) {
-  return d.getFullYear() + '-'
-    + String(d.getMonth()+1).padStart(2,'0') + '-'
-    + String(d.getDate()).padStart(2,'0');
+function calcFederalHolidays(year){
+  var h={};
+  function add(date,name){var obs=observedDate(date);h[toYMDDate(obs)]='🇺🇸 '+name;}
+  add(new Date(year,0,1),"New Year's Day");
+  add(getNthWeekday(year,0,1,3),'MLK Day');
+  add(getNthWeekday(year,1,1,3),"Presidents' Day");
+  add(getLastWeekday(year,4,1),'Memorial Day');
+  add(new Date(year,5,19),'Juneteenth');
+  add(new Date(year,6,4),'Independence Day');
+  add(getNthWeekday(year,8,1,1),'Labor Day');
+  add(getNthWeekday(year,9,1,2),'Columbus Day');
+  add(new Date(year,10,11),'Veterans Day');
+  add(getNthWeekday(year,10,4,4),'Thanksgiving Day');
+  add(new Date(year,11,25),'Christmas Day');
+  return h;
 }
 
-function calcFederalHolidays(year) {
-  var holidays = {};
-  function add(date, name) {
-    var obs = observedDate(date);
-    holidays[toYMDDate(obs)] = '🇺🇸 ' + name;
-  }
-
-  // 1. New Year's Day - Jan 1
-  add(new Date(year, 0, 1), "New Year's Day");
-
-  // 2. MLK Day - 3rd Monday in January
-  add(getNthWeekday(year, 0, 1, 3), 'MLK Day');
-
-  // 3. Presidents' Day - 3rd Monday in February
-  add(getNthWeekday(year, 1, 1, 3), "Presidents' Day");
-
-  // 4. Memorial Day - Last Monday in May
-  add(getLastWeekday(year, 4, 1), 'Memorial Day');
-
-  // 5. Juneteenth - June 19
-  add(new Date(year, 5, 19), 'Juneteenth');
-
-  // 6. Independence Day - July 4
-  add(new Date(year, 6, 4), 'Independence Day');
-
-  // 7. Labor Day - 1st Monday in September
-  add(getNthWeekday(year, 8, 1, 1), 'Labor Day');
-
-  // 8. Columbus Day - 2nd Monday in October
-  add(getNthWeekday(year, 9, 1, 2), 'Columbus Day');
-
-  // 9. Veterans Day - November 11
-  add(new Date(year, 10, 11), 'Veterans Day');
-
-  // 10. Thanksgiving - 4th Thursday in November
-  add(getNthWeekday(year, 10, 4, 4), 'Thanksgiving Day');
-
-  // 11. Christmas Day - December 25
-  add(new Date(year, 11, 25), 'Christmas Day');
-
-  return holidays;
-}
-
-function loadFederalHolidays() {
-  var y = new Date().getFullYear();
-  Object.assign(federalHolidays, calcFederalHolidays(y));
-  Object.assign(federalHolidays, calcFederalHolidays(y + 1));
-  Object.assign(federalHolidays, calcFederalHolidays(y - 1));
+function loadFederalHolidays(){
+  var y=new Date().getFullYear();
+  Object.assign(federalHolidays,calcFederalHolidays(y-1));
+  Object.assign(federalHolidays,calcFederalHolidays(y));
+  Object.assign(federalHolidays,calcFederalHolidays(y+1));
 }
 
 // ── 날짜 유틸 ─────────────────────────────────
-function fmtDisplay(str) {
-  if (!str) return '';
-  var m = String(str).match(/^(\d{4})-(\d{2})-(\d{2})/);
-  return m ? m[1]+'.'+m[2]+'.'+m[3] : str;
+function fmtDisplay(str){
+  if(!str)return'';
+  var m=String(str).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m?m[1]+'.'+m[2]+'.'+m[3]:str;
 }
-function toYMD(str) { return str ? String(str).substring(0,10) : ''; }
-function todayYMD() {
-  var d=new Date();
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-function isWeekend(ds) {
-  var p=ds.split('-');
-  var d=new Date(+p[0],+p[1]-1,+p[2]);
-  return d.getDay()===0||d.getDay()===6;
-}
-function isFederalHoliday(ds) { return !!federalHolidays[ds]; }
+function toYMD(str){return str?String(str).substring(0,10):'';}
+function todayYMD(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function isWeekend(ds){var p=ds.split('-');return new Date(+p[0],+p[1]-1,+p[2]).getDay()%6===0;}
+function isFedHoliday(ds){return !!federalHolidays[ds];}
 
-function calcBusinessDays(s, e, type) {
-  if (type&&type.includes('반차')) return 0.5;
-  var sp=s.split('-'), ep=e.split('-');
-  var start=new Date(+sp[0],+sp[1]-1,+sp[2]);
-  var end=new Date(+ep[0],+ep[1]-1,+ep[2]);
-  var cnt=0, cur=new Date(start);
+function calcBizDays(s,e,type){
+  if(type&&(type.includes('반차')||type.includes('Half')))return 0.5;
+  var sp=s.split('-'),ep=e.split('-');
+  var start=new Date(+sp[0],+sp[1]-1,+sp[2]),end=new Date(+ep[0],+ep[1]-1,+ep[2]);
+  var cnt=0,cur=new Date(start);
   while(cur<=end){
     var ds=cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0')+'-'+String(cur.getDate()).padStart(2,'0');
-    if(!isWeekend(ds)&&!isFederalHoliday(ds)) cnt++;
+    if(!isWeekend(ds)&&!isFedHoliday(ds))cnt++;
     cur.setDate(cur.getDate()+1);
   }
   return cnt;
 }
+
+function statusLabel(s){ return t('statusMap')[s]||s; }
 
 // ── API ───────────────────────────────────────
 async function apiGet(action){const r=await fetch(API+'?action='+action+'&t='+Date.now());return r.json();}
 async function apiPost(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body)});return r.json();}
 
 // ── 초기화 ────────────────────────────────────
-async function init() {
-  loadFederalHolidays(); // 동기 처리 - 즉시 완료
-  try {
-    [employees,leaves,settings]=await Promise.all([
-      apiGet('getEmployees'),apiGet('getLeaves'),apiGet('getSettings')
-    ]);
-    employees.filter(e=>e.isAdmin!=='Y').forEach(function(e,i){ ec[e.name]=COLORS[i%COLORS.length]; });
-    renderEmpStatusBar();
-    renderTodayBanner();
-    renderCal();
-    renderEmpGrid();
-  } catch(e) {
-    document.getElementById('cgrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--red)">데이터를 불러오지 못했어요. 새로고침 해주세요.</div>';
+async function init(){
+  loadFederalHolidays();
+  applyLang();
+  document.getElementById('btn-ko').classList.toggle('active',lang==='ko');
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  try{
+    [employees,leaves,settings]=await Promise.all([apiGet('getEmployees'),apiGet('getLeaves'),apiGet('getSettings')]);
+    employees.filter(e=>e.isAdmin!=='Y').forEach((e,i)=>{ec[e.name]=COLORS[i%COLORS.length];});
+    renderEmpStatusBar();renderTodayBanner();renderCal();renderEmpGrid();
+  }catch(e){
+    document.getElementById('cgrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--red)">'+t('errData')+'</div>';
   }
 }
 
-function renderEmpStatusBar() {
-  var bar=document.getElementById('emp-status-bar');
-  var emps=employees.filter(function(e){return e.isAdmin!=='Y';});
-  bar.innerHTML=emps.map(function(e){
-    return '<div class="emp-chip">'
-      +'<div class="emp-chip-dot" style="background:'+(ec[e.name]||'#2563eb')+'"></div>'
-      +'<span class="emp-chip-name">'+e.name+'</span>'
-      +'<span class="emp-chip-days">잔여 '+e.remainDays+'일</span>'
-      +'</div>';
-  }).join('');
+function renderEmpStatusBar(){
+  const emps=employees.filter(e=>e.isAdmin!=='Y');
+  document.getElementById('emp-status-bar').innerHTML=emps.map(e=>
+    `<div class="emp-chip"><div class="emp-chip-dot" style="background:${ec[e.name]||'#2563eb'}"></div><span class="emp-chip-name">${e.name}</span><span class="emp-chip-days">${t('remainDays')} ${e.remainDays}${t('days')}</span></div>`
+  ).join('');
 }
 
-function renderTodayBanner() {
-  var today=todayYMD();
-  var todayLeaves=leaves.filter(function(l){
-    return l.status==='승인'&&toYMD(l.startDate)<=today&&today<=toYMD(l.endDate);
-  });
-  var banner=document.getElementById('today-banner');
-  if(!todayLeaves.length){banner.style.display='none';return;}
+function renderTodayBanner(){
+  const today=todayYMD();
+  const tl=leaves.filter(l=>l.status==='승인'&&toYMD(l.startDate)<=today&&today<=toYMD(l.endDate));
+  const banner=document.getElementById('today-banner');
+  if(!tl.length){banner.style.display='none';return;}
   banner.style.display='flex';
-  document.getElementById('today-banner-title').textContent='오늘 휴가 중: '+todayLeaves.map(function(l){return l.name;}).join(', ');
-  document.getElementById('today-banner-sub').textContent='총 '+todayLeaves.length+'명이 휴가 중입니다';
+  document.getElementById('today-title').textContent=t('todayOn')+tl.map(l=>l.name).join(', ');
+  document.getElementById('today-sub').textContent=tl.length+t('todayPeople');
 }
 
 // ── 캘린더 ────────────────────────────────────
 function chMonth(d){calM+=d;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCal();}
 
-function renderCal() {
-  var titleEl=document.getElementById('cal-title');
-  var grid=document.getElementById('cgrid');
-  if(!titleEl||!grid) return;
-  titleEl.textContent=calY+'년 '+(calM+1)+'월';
-
-  var todayStr=todayYMD();
-  var html=['월','화','수','목','금'].map(function(d){return '<div class="cdh">'+d+'</div>';}).join('');
-
-  var firstDay=new Date(calY,calM,1);
-  var lastDay=new Date(calY,calM+1,0);
-  var cur=new Date(firstDay);
-  while(cur.getDay()!==1) cur.setDate(cur.getDate()-1);
-  var endBound=new Date(lastDay);
-  while(endBound.getDay()!==5) endBound.setDate(endBound.getDate()+1);
-
+function renderCal(){
+  const titleEl=document.getElementById('cal-title');
+  const grid=document.getElementById('cgrid');
+  if(!titleEl||!grid)return;
+  titleEl.textContent=t('calTitle',calY,calM);
+  const todayStr=todayYMD();
+  let html=t('calDays').map(d=>`<div class="cdh">${d}</div>`).join('');
+  const firstDay=new Date(calY,calM,1);
+  const lastDay=new Date(calY,calM+1,0);
+  const cur=new Date(firstDay);
+  while(cur.getDay()!==1)cur.setDate(cur.getDate()-1);
+  const endBound=new Date(lastDay);
+  while(endBound.getDay()!==5)endBound.setDate(endBound.getDate()+1);
   while(cur<=endBound){
-    var dow=cur.getDay();
+    const dow=cur.getDay();
     if(dow===0||dow===6){cur.setDate(cur.getDate()+1);continue;}
-    var y=cur.getFullYear();
-    var m=String(cur.getMonth()+1).padStart(2,'0');
-    var d=String(cur.getDate()).padStart(2,'0');
-    var ds=y+'-'+m+'-'+d;
-    var isThisMonth=cur.getMonth()===calM;
-    var isToday=ds===todayStr;
-    var holiday=federalHolidays[ds];
-
-    var dayLeaves=leaves.filter(function(l){
-      return l.status==='승인'&&toYMD(l.startDate)<=ds&&ds<=toYMD(l.endDate);
-    });
-    var tags=dayLeaves.slice(0,5).map(function(l){
-      var color=ec[l.name]||'#2563eb';
-      var bg=LIGHT[color]||'#eff4ff';
-      return '<div class="ctag" style="background:'+bg+';color:'+color+'">'+l.name+(l.type&&l.type.includes('반차')?' (반)':'')+'</div>';
+    const y=cur.getFullYear(),m=String(cur.getMonth()+1).padStart(2,'0'),d=String(cur.getDate()).padStart(2,'0');
+    const ds=`${y}-${m}-${d}`;
+    const isThisMonth=cur.getMonth()===calM;
+    const isToday=ds===todayStr;
+    const holiday=federalHolidays[ds];
+    const dayLeaves=leaves.filter(l=>l.status==='승인'&&toYMD(l.startDate)<=ds&&ds<=toYMD(l.endDate));
+    const tags=dayLeaves.slice(0,5).map(l=>{
+      const color=ec[l.name]||'#2563eb';
+      return `<div class="ctag" style="background:${LIGHT[color]||'#eff4ff'};color:${color}">${l.name}${l.type&&(l.type.includes('반차')||l.type.includes('Half'))?' (½)':''}</div>`;
     }).join('');
-
-    html+='<div class="cd'
-      +(!isThisMonth?' om':'')
-      +(isToday?' today':'')
-      +(holiday?' holiday':'')
-      +'">'
-      +(holiday?'<div class="hname">'+holiday+'</div>':'')
-      +'<div class="dn">'+cur.getDate()+'</div>'
-      +tags
-      +'</div>';
+    html+=`<div class="cd${!isThisMonth?' om':''}${isToday?' today':''}${holiday?' holiday':''}">${holiday?`<div class="hname">${holiday}</div>`:''}<div class="dn">${cur.getDate()}</div>${tags}</div>`;
     cur.setDate(cur.getDate()+1);
   }
   grid.innerHTML=html;
 }
 
 // ── 로그인 ────────────────────────────────────
-function openLoginModal(){
-  document.getElementById('login-modal').classList.add('open');
-  document.getElementById('admin-pw').value='';
-  document.getElementById('login-err').textContent='';
-}
+function openLoginModal(){document.getElementById('login-modal').classList.add('open');document.getElementById('admin-pw').value='';document.getElementById('login-err').textContent='';}
 function closeLoginModal(){document.getElementById('login-modal').classList.remove('open');}
 
 function renderEmpGrid(){
-  var grid=document.getElementById('emp-grid');
-  var emps=employees.filter(function(e){return e.isAdmin!=='Y';});
-  if(!emps.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--text3)">등록된 직원이 없어요</div>';return;}
-  grid.innerHTML=emps.map(function(e){
-    return '<button class="emp-btn" onclick="empLogin(\''+e.name+'\')"><div class="en">'+e.name+'</div><div class="er">잔여 '+e.remainDays+'일</div></button>';
-  }).join('');
+  const grid=document.getElementById('emp-grid');
+  const emps=employees.filter(e=>e.isAdmin!=='Y');
+  if(!emps.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;color:var(--text3)">No employees registered</div>`;return;}
+  grid.innerHTML=emps.map(e=>`<button class="emp-btn" onclick="empLogin('${e.name}')"><div class="en">${e.name}</div><div class="er">${t('remainDays')} ${e.remainDays}${t('days')}</div></button>`).join('');
 }
 
 async function empLogin(name){me=name;isAdmin=false;closeLoginModal();enterMain();}
-
 async function adminLogin(){
-  var pw=document.getElementById('admin-pw').value;
-  var adminPw=settings['관리자비밀번호']||'jnfam2026';
-  if(pw!==adminPw){document.getElementById('login-err').textContent='❌ 비밀번호가 틀렸습니다';return;}
-  var adminEmp=employees.find(function(e){return e.isAdmin==='Y';});
-  me=adminEmp?adminEmp.name:'관리자';isAdmin=true;
-  closeLoginModal();enterMain();
+  const pw=document.getElementById('admin-pw').value;
+  if(pw!==(settings['관리자비밀번호']||'jnfam2026')){document.getElementById('login-err').textContent=t('pwWrong');return;}
+  const adminEmp=employees.find(e=>e.isAdmin==='Y');
+  me=adminEmp?adminEmp.name:'관리자';isAdmin=true;closeLoginModal();enterMain();
 }
 
 function enterMain(){
   document.getElementById('btn-login-open').style.display='none';
   document.getElementById('header-user').style.display='flex';
   document.getElementById('hd-name').textContent=me;
-  document.getElementById('hd-badge').innerHTML=isAdmin
-    ?'<span class="badge badge-admin">👑 관리자</span>'
-    :'<span class="badge badge-user">직원</span>';
+  document.getElementById('hd-badge').innerHTML=isAdmin?`<span class="badge badge-admin">${t('adminBadge')}</span>`:`<span class="badge badge-user">${t('userBadge')}</span>`;
   document.getElementById('my-panel').style.display='block';
   activeTab=0;renderMyTabs();renderMyContent();
 }
@@ -512,205 +549,186 @@ function logout(){
 }
 
 function renderMyTabs(){
-  var tabs=isAdmin?['📋 승인 대기','📅 전체 내역','👥 직원 현황']:['✉️ 휴가 신청','📋 내 내역'];
-  document.getElementById('tabs').innerHTML=tabs.map(function(t,i){
-    return '<button class="tab '+(activeTab===i?'active':'')+'" onclick="setTab('+i+')">'+t+'</button>';
-  }).join('');
+  const tabs=isAdmin?[t('tabPending'),t('tabAll'),t('tabEmps')]:[t('tabApply'),t('tabMine')];
+  document.getElementById('tabs').innerHTML=tabs.map((tb,i)=>`<button class="tab ${activeTab===i?'active':''}" onclick="setTab(${i})">${tb}</button>`).join('');
 }
 function setTab(i){activeTab=i;renderMyTabs();renderMyContent();}
 
 function renderMyContent(){
-  var el=document.getElementById('tab-content');
+  const el=document.getElementById('tab-content');
   if(isAdmin){
-    if(activeTab===0) el.innerHTML=renderPending();
-    else if(activeTab===1) el.innerHTML=renderAllLeaves();
+    if(activeTab===0)el.innerHTML=renderPending();
+    else if(activeTab===1)el.innerHTML=renderAllLeaves();
     else el.innerHTML=renderEmpStatus();
   }else{
-    if(activeTab===0) el.innerHTML=renderForm();
+    if(activeTab===0)el.innerHTML=renderForm();
     else el.innerHTML=renderMyLeaves();
   }
 }
 
 function renderMyStats(){
-  var emp=employees.find(function(e){return e.name===me;})||{};
-  var total=Number(emp.totalDays)||0,used=Number(emp.usedDays)||0,remain=Number(emp.remainDays)||0;
-  var pending=leaves.filter(function(l){return l.name===me&&l.status==='대기';}).length;
-  return '<div class="stats">'
-    +'<div class="stat st-b"><div class="lbl">총 연차</div><div class="val" style="color:var(--accent)">'+total+'</div></div>'
-    +'<div class="stat st-r"><div class="lbl">사용</div><div class="val" style="color:var(--red)">'+used+'</div></div>'
-    +'<div class="stat st-g"><div class="lbl">잔여</div><div class="val" style="color:var(--green)">'+remain+'</div></div>'
-    +'<div class="stat st-o"><div class="lbl">대기중</div><div class="val" style="color:var(--orange)">'+pending+'</div></div>'
-    +'</div>';
+  const emp=employees.find(e=>e.name===me)||{};
+  const total=Number(emp.totalDays)||0,used=Number(emp.usedDays)||0,remain=Number(emp.remainDays)||0;
+  const pending=leaves.filter(l=>l.name===me&&l.status==='대기').length;
+  return `<div class="stats">
+    <div class="stat st-b"><div class="lbl">${t('statTotal')}</div><div class="val" style="color:var(--accent)">${total}</div></div>
+    <div class="stat st-r"><div class="lbl">${t('statUsed')}</div><div class="val" style="color:var(--red)">${used}</div></div>
+    <div class="stat st-g"><div class="lbl">${t('statRemain')}</div><div class="val" style="color:var(--green)">${remain}</div></div>
+    <div class="stat st-o"><div class="lbl">${t('statPending')}</div><div class="val" style="color:var(--orange)">${pending}</div></div>
+  </div>`;
 }
 
 function renderForm(){
-  return renderMyStats()
-    +'<div class="card"><div class="card-hd"><h3>✉️ 휴가 신청</h3>'
-    +'<span style="font-size:11px;color:var(--text3)">🇺🇸 미국 연방 공휴일·주말 자동 제외</span></div>'
-    +'<div class="card-bd"><div class="fgrid">'
-    +'<div class="fg"><label>휴가 종류</label>'
-    +'<select id="f-type" onchange="updatePreview()">'
-    +'<option>연차</option><option>반차(오전)</option><option>반차(오후)</option><option>병가</option><option>기타</option>'
-    +'</select></div>'
-    +'<div class="fg"><label>시작일</label><input type="date" id="f-start" oninput="updatePreview()"></div>'
-    +'<div class="fg" id="end-wrap"><label>종료일</label><input type="date" id="f-end" oninput="updatePreview()"></div>'
-    +'<div class="fg"><label>계산된 영업일</label><div class="days-preview" id="days-preview">날짜를 선택하면 자동 계산됩니다</div></div>'
-    +'<div class="fg ff"><label>사유</label><textarea id="f-reason" placeholder="사유 입력 (선택)"></textarea></div>'
-    +'</div><div class="fa"><button class="btn btn-p" onclick="submitLeave()">신청하기</button></div>'
-    +'</div></div>';
+  const typeOpts=t('types').map(tp=>`<option>${tp}</option>`).join('');
+  return renderMyStats()+`<div class="card">
+    <div class="card-hd"><h3>${t('applyTitle')}</h3><span style="font-size:11px;color:var(--text3)">${t('applyNote')}</span></div>
+    <div class="card-bd"><div class="fgrid">
+      <div class="fg"><label>${t('leaveType')}</label><select id="f-type" onchange="updatePreview()">${typeOpts}</select></div>
+      <div class="fg"><label>${t('startDate')}</label><input type="date" id="f-start" oninput="updatePreview()"></div>
+      <div class="fg" id="end-wrap"><label>${t('endDate')}</label><input type="date" id="f-end" oninput="updatePreview()"></div>
+      <div class="fg"><label>${t('calcDays')}</label><div class="days-preview" id="days-preview">${t('selectDate')}</div></div>
+      <div class="fg ff"><label>${t('reason')}</label><textarea id="f-reason" placeholder="${t('reasonPh')}"></textarea></div>
+    </div><div class="fa"><button class="btn btn-p" onclick="submitLeave()">${t('applyBtn')}</button></div>
+    </div></div>`;
 }
 
+function isHalfType(type){return type&&(type.includes('반차')||type.includes('Half'));}
+
 function updatePreview(){
-  var type=document.getElementById('f-type')?.value||'';
-  var start=document.getElementById('f-start')?.value;
-  var isHalf=type.includes('반차');
-  var ew=document.getElementById('end-wrap');
-  if(ew) ew.style.display=isHalf?'none':'';
-  var end=isHalf?start:document.getElementById('f-end')?.value;
-  var p=document.getElementById('days-preview');
-  if(!p) return;
-  if(!start){p.textContent='날짜를 선택하면 자동 계산됩니다';return;}
-  if(isHalf){p.textContent='0.5일 (반차)';return;}
-  if(!end){p.textContent='종료일을 선택해주세요';return;}
-  if(end<start){p.textContent='❌ 종료일이 시작일보다 빠릅니다';return;}
-  var days=calcBusinessDays(start,end,type);
-  var h=Object.keys(federalHolidays).filter(function(d){return d>=start&&d<=end;}).length;
-  p.textContent='📅 총 '+days+'일 (영업일 기준)'+(h>0?' · 연방 공휴일 '+h+'일 제외':'');
+  const type=document.getElementById('f-type')?.value||'';
+  const start=document.getElementById('f-start')?.value;
+  const half=isHalfType(type);
+  const ew=document.getElementById('end-wrap');
+  if(ew)ew.style.display=half?'none':'';
+  const end=half?start:document.getElementById('f-end')?.value;
+  const p=document.getElementById('days-preview');
+  if(!p)return;
+  if(!start){p.textContent=t('selectDate');return;}
+  if(half){p.textContent=t('halfDay');return;}
+  if(!end){p.textContent=t('selectEnd');return;}
+  if(end<start){p.textContent=t('errEndDate');return;}
+  const days=calcBizDays(start,end,type);
+  const h=Object.keys(federalHolidays).filter(d=>d>=start&&d<=end).length;
+  p.textContent=t('daysResult',days,h);
 }
 
 async function submitLeave(){
-  var type=document.getElementById('f-type').value;
-  var start=document.getElementById('f-start').value;
-  var isHalf=type.includes('반차');
-  var end=isHalf?start:(document.getElementById('f-end')?.value||start);
-  var reason=document.getElementById('f-reason').value;
-  if(!start){toast('❌ 시작일을 입력해주세요');return;}
-  if(!isHalf&&end<start){toast('❌ 종료일이 시작일보다 빠릅니다');return;}
-  var days=calcBusinessDays(start,end,type);
-  if(days===0){toast('❌ 선택한 기간에 영업일이 없어요');return;}
+  const type=document.getElementById('f-type').value;
+  const start=document.getElementById('f-start').value;
+  const half=isHalfType(type);
+  const end=half?start:(document.getElementById('f-end')?.value||start);
+  const reason=document.getElementById('f-reason').value;
+  if(!start){toast(t('errStart'));return;}
+  if(!half&&end<start){toast(t('errEndDate'));return;}
+  const days=calcBizDays(start,end,type);
+  if(days===0){toast(t('errNoWorkday'));return;}
   try{
-    var res=await apiPost({action:'applyLeave',name:me,type,startDate:start,endDate:end,days,reason});
-    if(res.success){
-      toast('✅ 휴가 신청이 완료됐어요!');
-      leaves=await apiGet('getLeaves');
-      renderTodayBanner();renderCal();setTab(1);
-    }else toast('❌ 신청 실패');
-  }catch(e){toast('❌ 오류가 발생했어요');}
+    const res=await apiPost({action:'applyLeave',name:me,type,startDate:start,endDate:end,days,reason});
+    if(res.success){toast(t('applySuccess'));leaves=await apiGet('getLeaves');renderTodayBanner();renderCal();setTab(1);}
+    else toast(t('applyFail'));
+  }catch(e){toast(t('applyFail'));}
 }
 
 function renderMyLeaves(){
-  var my=leaves.filter(function(l){return l.name===me;}).reverse();
-  if(!my.length) return renderMyStats()+'<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>신청 내역이 없어요</p></div></div></div>';
-  return renderMyStats()+'<div class="card">'
-    +'<div class="card-hd"><h3>📋 내 신청 내역</h3><span style="font-size:12px;color:var(--text3)">'+my.length+'건</span></div>'
-    +'<div class="card-bd"><div class="llist">'
-    +my.map(function(l){
-      return '<div class="litem"><div class="li-left">'
-        +'<div class="li-title">'+l.type+' · '+l.days+'일</div>'
-        +'<div class="li-meta">'+fmtDisplay(l.startDate)+' ~ '+fmtDisplay(l.endDate)+' · 신청: '+fmtDisplay(l.applyDate)+'</div>'
-        +(l.reason?'<div style="font-size:11px;color:var(--text2);margin-top:2px">사유: '+l.reason+'</div>':'')
-        +(l.note?'<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 '+l.note+'</div>':'')
-        +'</div><div class="li-act">'
-        +'<span class="sbadge s'+l.status+'">'+l.status+'</span>'
-        +(l.status==='대기'?'<button class="btn btn-o btn-sm" onclick="cancelLeave(\''+l.id+'\')">취소</button>':'')
-        +'</div></div>';
-    }).join('')
-    +'</div></div></div>';
+  const my=leaves.filter(l=>l.name===me).reverse();
+  if(!my.length)return renderMyStats()+`<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>${t('noLeaves')}</p></div></div></div>`;
+  return renderMyStats()+`<div class="card">
+    <div class="card-hd"><h3>${t('myLeaves')}</h3><span style="font-size:12px;color:var(--text3)">${my.length}</span></div>
+    <div class="card-bd"><div class="llist">${my.map(l=>`
+      <div class="litem"><div class="li-left">
+        <div class="li-title">${l.type} · ${l.days}${t('days')}</div>
+        <div class="li-meta">${fmtDisplay(l.startDate)} ~ ${fmtDisplay(l.endDate)} · ${t('applied')}${fmtDisplay(l.applyDate)}</div>
+        ${l.reason?`<div style="font-size:11px;color:var(--text2);margin-top:2px">${l.reason}</div>`:''}
+        ${l.note?`<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 ${l.note}</div>`:''}
+      </div><div class="li-act">
+        <span class="sbadge s${l.status}">${statusLabel(l.status)}</span>
+        ${l.status==='대기'?`<button class="btn btn-o btn-sm" onclick="cancelLeave('${l.id}')">${t('cancel')}</button>`:''}
+      </div></div>`).join('')}
+    </div></div></div>`;
 }
 
 async function cancelLeave(id){
-  if(!confirm('이 신청을 취소할까요?')) return;
-  var res=await apiPost({action:'cancelLeave',id:id,name:me});
-  if(res.success){toast('✅ 취소됐어요');leaves=await apiGet('getLeaves');renderTodayBanner();renderCal();renderMyContent();}
+  if(!confirm(t('cancelConfirm')))return;
+  const res=await apiPost({action:'cancelLeave',id,name:me});
+  if(res.success){toast(t('cancelOk'));leaves=await apiGet('getLeaves');renderTodayBanner();renderCal();renderMyContent();}
 }
 
 function renderPending(){
-  var p=leaves.filter(function(l){return l.status==='대기';}).reverse();
-  if(!p.length) return '<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">✅</div><p>대기 중인 신청이 없어요</p></div></div></div>';
-  return '<div class="card"><div class="card-hd"><h3>📋 승인 대기</h3><span style="font-size:12px;color:var(--orange);font-weight:700">'+p.length+'건</span></div>'
-    +'<div class="card-bd"><div class="llist">'
-    +p.map(function(l){
-      return '<div class="litem"><div class="li-left">'
-        +'<div class="li-title">👤 '+l.name+' · '+l.type+' · '+l.days+'일</div>'
-        +'<div class="li-meta">'+fmtDisplay(l.startDate)+' ~ '+fmtDisplay(l.endDate)+' · 신청: '+fmtDisplay(l.applyDate)+'</div>'
-        +(l.reason?'<div style="font-size:11px;color:var(--text2);margin-top:2px">사유: '+l.reason+'</div>':'')
-        +'</div><div class="li-act">'
-        +'<button class="btn btn-s btn-sm" onclick="openModal(\''+l.id+'\',\''+l.name+'\',\''+l.type+'\',\''+l.days+'\')">승인</button>'
-        +'<button class="btn btn-d btn-sm" onclick="openModal(\''+l.id+'\',\''+l.name+'\',\''+l.type+'\',\''+l.days+'\')">반려</button>'
-        +'</div></div>';
-    }).join('')
-    +'</div></div></div>';
+  const p=leaves.filter(l=>l.status==='대기').reverse();
+  if(!p.length)return`<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">✅</div><p>${t('noPending')}</p></div></div></div>`;
+  return`<div class="card">
+    <div class="card-hd"><h3>${t('pendingTitle')}</h3><span style="font-size:12px;color:var(--orange);font-weight:700">${p.length}</span></div>
+    <div class="card-bd"><div class="llist">${p.map(l=>`
+      <div class="litem"><div class="li-left">
+        <div class="li-title">👤 ${l.name} · ${l.type} · ${l.days}${t('days')}</div>
+        <div class="li-meta">${fmtDisplay(l.startDate)} ~ ${fmtDisplay(l.endDate)} · ${t('applied')}${fmtDisplay(l.applyDate)}</div>
+        ${l.reason?`<div style="font-size:11px;color:var(--text2);margin-top:2px">${l.reason}</div>`:''}
+      </div><div class="li-act">
+        <button class="btn btn-s btn-sm" onclick="openModal('${l.id}','${l.name}','${l.type}','${l.days}')">${t('approve')}</button>
+        <button class="btn btn-d btn-sm" onclick="openModal('${l.id}','${l.name}','${l.type}','${l.days}')">${t('reject')}</button>
+      </div></div>`).join('')}
+    </div></div></div>`;
 }
 
 function renderAllLeaves(){
-  var all=[...leaves].reverse();
-  if(!all.length) return '<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>신청 내역이 없어요</p></div></div></div>';
-  return '<div class="card"><div class="card-hd"><h3>📅 전체 내역</h3><span style="font-size:12px;color:var(--text3)">'+all.length+'건</span></div>'
-    +'<div class="card-bd"><div class="llist">'
-    +all.map(function(l){
-      return '<div class="litem"><div class="li-left">'
-        +'<div class="li-title">👤 '+l.name+' · '+l.type+' · '+l.days+'일</div>'
-        +'<div class="li-meta">'+fmtDisplay(l.startDate)+' ~ '+fmtDisplay(l.endDate)+' · 신청: '+fmtDisplay(l.applyDate)+(l.processDate?' · 처리: '+fmtDisplay(l.processDate):'')+'</div>'
-        +(l.note?'<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 '+l.note+'</div>':'')
-        +'</div><span class="sbadge s'+l.status+'">'+l.status+'</span></div>';
-    }).join('')
-    +'</div></div></div>';
+  const all=[...leaves].reverse();
+  if(!all.length)return`<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>${t('noAll')}</p></div></div></div>`;
+  return`<div class="card">
+    <div class="card-hd"><h3>${t('allTitle')}</h3><span style="font-size:12px;color:var(--text3)">${all.length}</span></div>
+    <div class="card-bd"><div class="llist">${all.map(l=>`
+      <div class="litem"><div class="li-left">
+        <div class="li-title">👤 ${l.name} · ${l.type} · ${l.days}${t('days')}</div>
+        <div class="li-meta">${fmtDisplay(l.startDate)} ~ ${fmtDisplay(l.endDate)} · ${t('applied')}${fmtDisplay(l.applyDate)}${l.processDate?' · '+t('processed')+fmtDisplay(l.processDate):''}</div>
+        ${l.note?`<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 ${l.note}</div>`:''}
+      </div><span class="sbadge s${l.status}">${statusLabel(l.status)}</span></div>`).join('')}
+    </div></div></div>`;
 }
 
 function renderEmpStatus(){
-  var emps=employees.filter(function(e){return e.isAdmin!=='Y';});
-  return '<div class="card"><div class="card-hd"><h3>👥 직원 연차 현황</h3></div>'
-    +'<div class="card-bd" style="padding:0"><table class="etable">'
-    +'<thead><tr><th>직원명</th><th>총 연차</th><th>사용</th><th>잔여</th><th>사용률</th></tr></thead>'
-    +'<tbody>'+emps.map(function(e){
-      var total=Number(e.totalDays)||0,used=Number(e.usedDays)||0,remain=Number(e.remainDays)||0;
-      var pct=total?Math.min(100,Math.round(used/total*100)):0;
-      var color=pct>80?'var(--red)':pct>50?'var(--orange)':'var(--accent)';
-      return '<tr><td style="font-weight:700">'+e.name+'</td><td>'+total+'일</td>'
-        +'<td style="color:var(--red)">'+used+'일</td>'
-        +'<td style="color:var(--green);font-weight:700">'+remain+'일</td>'
-        +'<td style="min-width:100px"><div style="font-size:11px;color:var(--text3);margin-bottom:2px">'+pct+'%</div>'
-        +'<div class="pbar"><div class="pfill" style="width:'+pct+'%;background:'+color+'"></div></div></td></tr>';
-    }).join('')+'</tbody></table></div></div>';
+  const emps=employees.filter(e=>e.isAdmin!=='Y');
+  return`<div class="card">
+    <div class="card-hd"><h3>${t('empTitle')}</h3></div>
+    <div class="card-bd" style="padding:0"><table class="etable">
+      <thead><tr><th>${t('colName')}</th><th>${t('colTotal')}</th><th>${t('colUsed')}</th><th>${t('colRemain')}</th><th>${t('colRate')}</th></tr></thead>
+      <tbody>${emps.map(e=>{
+        const total=Number(e.totalDays)||0,used=Number(e.usedDays)||0,remain=Number(e.remainDays)||0;
+        const pct=total?Math.min(100,Math.round(used/total*100)):0;
+        const color=pct>80?'var(--red)':pct>50?'var(--orange)':'var(--accent)';
+        return`<tr><td style="font-weight:700">${e.name}</td><td>${total}${t('days')}</td><td style="color:var(--red)">${used}${t('days')}</td><td style="color:var(--green);font-weight:700">${remain}${t('days')}</td>
+          <td style="min-width:100px"><div style="font-size:11px;color:var(--text3);margin-bottom:2px">${pct}%</div><div class="pbar"><div class="pfill" style="width:${pct}%;background:${color}"></div></div></td></tr>`;
+      }).join('')}</tbody>
+    </table></div></div>`;
 }
 
 function openModal(id,name,type,days){
   document.getElementById('modal-id').value=id;
   document.getElementById('modal-note').value='';
-  document.getElementById('modal-info').innerHTML='👤 <strong>'+name+'</strong> · '+type+' · <strong>'+days+'일</strong>';
+  document.getElementById('modal-info').innerHTML=`👤 <strong>${name}</strong> · ${type} · <strong>${days}${t('days')}</strong>`;
   document.getElementById('modal-wrap').classList.add('open');
 }
 function closeModal(){document.getElementById('modal-wrap').classList.remove('open');}
 
 async function doProcess(status){
-  var id=document.getElementById('modal-id').value;
-  var note=document.getElementById('modal-note').value;
+  const id=document.getElementById('modal-id').value;
+  const note=document.getElementById('modal-note').value;
   try{
-    var res=await apiPost({action:'processLeave',id:id,status:status,processor:me,note:note});
+    const res=await apiPost({action:'processLeave',id,status,processor:me,note});
     if(res.success){
-      toast(status==='승인'?'✅ 승인됐어요':'❌ 반려됐어요');
+      toast(status==='승인'?t('approved'):t('rejected'));
       closeModal();
-      var results=await Promise.all([apiGet('getLeaves'),apiGet('getEmployees')]);
+      const results=await Promise.all([apiGet('getLeaves'),apiGet('getEmployees')]);
       leaves=results[0];employees=results[1];
-      employees.filter(function(e){return e.isAdmin!=='Y';}).forEach(function(e,i){ec[e.name]=COLORS[i%COLORS.length];});
+      employees.filter(e=>e.isAdmin!=='Y').forEach((e,i)=>{ec[e.name]=COLORS[i%COLORS.length];});
       renderEmpStatusBar();renderTodayBanner();renderCal();
-      if(me) renderMyContent();
+      if(me)renderMyContent();
     }
-  }catch(e){toast('❌ 처리 실패');}
+  }catch(e){toast(t('processFail'));}
 }
 
-function toast(msg){
-  var el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  setTimeout(function(){el.classList.remove('show');},2800);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2800);}
 
-document.getElementById('login-modal').addEventListener('click',function(e){
-  if(e.target===document.getElementById('login-modal')) closeLoginModal();
-});
-document.getElementById('modal-wrap').addEventListener('click',function(e){
-  if(e.target===document.getElementById('modal-wrap')) closeModal();
-});
+document.getElementById('login-modal').addEventListener('click',e=>{if(e.target===document.getElementById('login-modal'))closeLoginModal();});
+document.getElementById('modal-wrap').addEventListener('click',e=>{if(e.target===document.getElementById('modal-wrap'))closeModal();});
 
 init();
 </script>
