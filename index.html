@@ -36,8 +36,6 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .btn-o{background:var(--white);color:var(--text2);border:1.5px solid var(--border);}.btn-o:hover{background:var(--bg);}
 .btn-sm{padding:5px 12px;font-size:12px;}
 .container{max-width:1100px;margin:0 auto;padding:32px 24px;}
-
-/* 로그인 */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;}
 .login-card{background:var(--white);border-radius:16px;padding:40px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);border:1px solid var(--border);}
 .login-card h1{font-size:22px;font-weight:900;margin-bottom:4px;}
@@ -52,8 +50,6 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .admin-row{display:flex;gap:8px;}
 .admin-row input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;}
 .admin-row input:focus{border-color:var(--accent);}
-
-/* 통계 */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
 .stat{background:var(--white);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);}
 .stat .lbl{font-size:11px;color:var(--text3);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
@@ -63,19 +59,13 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .st-g{border-top:3px solid var(--green);}
 .st-o{border-top:3px solid var(--orange);}
 .st-r{border-top:3px solid var(--red);}
-
-/* 탭 */
 .tabs{display:flex;gap:4px;background:var(--white);border-radius:10px;padding:4px;margin-bottom:24px;border:1px solid var(--border);box-shadow:var(--shadow);}
 .tab{flex:1;text-align:center;padding:9px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--text3);font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
 .tab.active{background:var(--accent);color:#fff;}
-
-/* 카드 */
 .card{background:var(--white);border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px;}
 .card-hd{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .card-hd h3{font-size:15px;font-weight:700;}
 .card-bd{padding:22px;}
-
-/* 폼 */
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .ff{grid-column:1/-1;}
 .fg label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;}
@@ -83,9 +73,7 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
 .fg textarea{resize:vertical;min-height:72px;}
 .fa{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
-.days-preview{background:var(--accent-l);border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--accent);font-weight:700;margin-top:8px;}
-
-/* 목록 */
+.days-preview{background:var(--accent-l);border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--accent);font-weight:700;}
 .llist{display:flex;flex-direction:column;gap:10px;}
 .litem{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;}
 .li-left{flex:1;min-width:0;}
@@ -97,8 +85,6 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .s승인{background:var(--green-l);color:var(--green);}
 .s반려{background:var(--red-l);color:var(--red);}
 .s취소{background:var(--bg);color:var(--text3);border:1px solid var(--border);}
-
-/* 캘린더 - 주말 제외 5열 */
 .cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .cal-hd h3{font-size:16px;font-weight:700;}
 .cal-nav{display:flex;gap:6px;}
@@ -106,7 +92,7 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .cal-nav button:hover{background:var(--bg);}
 .cgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
 .cdh{text-align:center;font-size:11px;font-weight:700;color:var(--text3);padding:6px 0;}
-.cd{min-height:80px;border-radius:8px;padding:8px;border:1px solid var(--border);background:var(--white);font-size:12px;}
+.cd{min-height:80px;border-radius:8px;padding:8px;border:1px solid var(--border);background:var(--white);}
 .cd.today{border-color:var(--accent);background:var(--accent-l);}
 .cd.holiday{background:#fef2f2;border-color:#fca5a5;}
 .cd.om{opacity:.4;background:var(--bg);}
@@ -114,46 +100,28 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 .cd.holiday .dn{color:var(--red);}
 .cd .hname{font-size:9px;color:var(--red);margin-bottom:3px;font-weight:600;}
 .ctag{font-size:10px;padding:2px 6px;border-radius:4px;margin-top:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-/* 직원현황 */
 .etable{width:100%;border-collapse:collapse;font-size:13px;}
-.etable th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--text3);border-bottom:1px solid var(--border);text-transform:uppercase;}
+.etable th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--text3);border-bottom:1px solid var(--border);}
 .etable td{padding:12px 14px;border-bottom:1px solid var(--border);}
 .etable tr:last-child td{border-bottom:none;}
 .pbar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:4px;}
 .pfill{height:100%;border-radius:3px;}
-
-/* 빈상태 */
 .empty{text-align:center;padding:48px;color:var(--text3);}
 .empty-icon{font-size:36px;margin-bottom:10px;}
-
-/* 모달 */
 #modal-wrap{display:none;position:fixed;inset:0;background:rgba(30,37,51,.5);z-index:2000;align-items:center;justify-content:center;}
 #modal-wrap.open{display:flex;}
 .modal{background:var(--white);border-radius:14px;padding:28px;width:100%;max-width:460px;margin:24px;box-shadow:0 8px 40px rgba(0,0,0,.14);}
 .modal h3{font-size:17px;font-weight:800;margin-bottom:16px;}
 .modal-act{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;}
-
-/* 스피너/토스트 */
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-#toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;border-radius:10px;padding:13px 20px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .25s;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.18);}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;border-radius:10px;padding:13px 20px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .25s;z-index:9999;}
 #toast.show{transform:translateY(0);opacity:1;}
-.holiday-info{font-size:11px;color:var(--text3);margin-top:4px;}
-
-@media(max-width:640px){
-  .stats{grid-template-columns:1fr 1fr;}
-  .fgrid{grid-template-columns:1fr;}
-  header{padding:0 16px;}
-  .container{padding:16px;}
-  .emp-grid{grid-template-columns:1fr;}
-  .cgrid{grid-template-columns:repeat(5,1fr);}
-}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr;}.fgrid{grid-template-columns:1fr;}header{padding:0 16px;}.container{padding:16px;}.emp-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<!-- 로그인 -->
 <div id="login-screen">
   <div class="login-card">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:20px;">
@@ -177,7 +145,6 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
   </div>
 </div>
 
-<!-- 메인 -->
 <div id="main-screen" style="display:none">
   <header>
     <div class="logo"><div class="logo-dot"></div>JNFAM<span>/leave</span></div>
@@ -194,13 +161,11 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
   </div>
 </div>
 
-<!-- 처리 모달 -->
 <div id="modal-wrap">
   <div class="modal">
-    <h3 id="modal-title">휴가 처리</h3>
+    <h3>휴가 처리</h3>
     <div style="background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px;" id="modal-info"></div>
     <input type="hidden" id="modal-id">
-    <input type="hidden" id="modal-action">
     <div class="fg">
       <label>처리 메모 (선택)</label>
       <textarea id="modal-note" placeholder="반려 사유 등"></textarea>
@@ -217,77 +182,67 @@ header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbyRdAFyS4zhClmX6dLiAAQ9HTrq1PmYPm2nFxfYYAMM7_r-nUFhXOO7tRXUT6U6c2GgOg/exec';
-let me=null, isAdmin=false, employees=[], leaves=[], settings={};
-let calY=new Date().getFullYear(), calM=new Date().getMonth(), activeTab=0;
-let usHolidays={}; // {YYYY-MM-DD: 'Holiday Name'}
+let me=null,isAdmin=false,employees=[],leaves=[],settings={};
+let calY=new Date().getFullYear(),calM=new Date().getMonth(),activeTab=0;
+let usHolidays={};
 
 // ── 날짜 유틸 ─────────────────────────────────
-// 날짜 문자열을 로컬 날짜로 안전하게 파싱 (시간대 오류 방지)
-function parseDate(str) {
-  if (!str) return null;
-  // ISO 형식이면 날짜 부분만 추출
-  const s = String(str).split('T')[0];
-  const parts = s.split('-');
-  if (parts.length === 3) return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-  return new Date(str);
+// Apps Script에서 YYYY-MM-DD 문자열로 오므로 그대로 사용
+// 화면 표시용으로만 변환
+function fmtDisplay(str) {
+  if (!str || str === '') return '';
+  // YYYY-MM-DD 형식인지 확인
+  const match = String(str).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) return `${match[1]}.${match[2]}.${match[3]}`;
+  return str;
 }
 
-function toDateStr(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth()+1).padStart(2,'0');
-  const d = String(date.getDate()).padStart(2,'0');
-  return `${y}-${m}-${d}`;
+// 날짜 비교용 (YYYY-MM-DD 문자열 직접 비교)
+function toYMD(str) {
+  if (!str) return '';
+  return String(str).substring(0, 10); // YYYY-MM-DD 앞 10자리만
 }
 
-function isWeekend(date) {
-  const dow = date.getDay();
-  return dow === 0 || dow === 6;
+// 오늘 날짜 YYYY-MM-DD
+function todayYMD() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-function isHoliday(dateStr) {
-  return !!usHolidays[dateStr];
+// 주말 여부
+function isWeekend(dateStr) {
+  const parts = dateStr.split('-');
+  const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  return d.getDay() === 0 || d.getDay() === 6;
 }
 
-function isWorkday(date) {
-  return !isWeekend(date) && !isHoliday(toDateStr(date));
-}
+// 공휴일 여부
+function isHoliday(dateStr) { return !!usHolidays[dateStr]; }
 
-// 시작일~종료일 사이 영업일 수 계산 (주말+공휴일 제외)
+// 영업일 계산
 function calcBusinessDays(startStr, endStr, type) {
   if (type && type.includes('반차')) return 0.5;
-  const start = parseDate(startStr);
-  const end = parseDate(endStr);
-  if (!start || !end) return 0;
-  let count = 0;
-  const cur = new Date(start);
+  const s = startStr.split('-'), e = endStr.split('-');
+  const start = new Date(parseInt(s[0]), parseInt(s[1])-1, parseInt(s[2]));
+  const end   = new Date(parseInt(e[0]), parseInt(e[1])-1, parseInt(e[2]));
+  let count = 0, cur = new Date(start);
   while (cur <= end) {
-    if (isWorkday(cur)) count++;
+    const ds = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`;
+    if (!isWeekend(ds) && !isHoliday(ds)) count++;
     cur.setDate(cur.getDate()+1);
   }
   return count;
 }
 
-// 날짜 표시용 포맷
-function fmtDate(str) {
-  const d = parseDate(str);
-  if (!d) return str;
-  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
-}
-
-// ── 미국 공휴일 로드 ──────────────────────────
-async function loadUSHolidays(year) {
-  try {
-    const res = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/US`);
-    const data = await res.json();
-    data.forEach(h => { usHolidays[h.date] = h.localName || h.name; });
-    // 다음 해도 로드 (연말 신청 대비)
-    if (year === new Date().getFullYear()) {
-      const res2 = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year+1}/US`);
-      const data2 = await res2.json();
-      data2.forEach(h => { usHolidays[h.date] = h.localName || h.name; });
-    }
-  } catch(e) {
-    console.warn('공휴일 로드 실패:', e);
+// ── 미국 공휴일 ───────────────────────────────
+async function loadHolidays() {
+  const years = [new Date().getFullYear(), new Date().getFullYear()+1];
+  for (const y of years) {
+    try {
+      const r = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${y}/US`);
+      const data = await r.json();
+      if (Array.isArray(data)) data.forEach(h => { usHolidays[h.date] = h.localName||h.name; });
+    } catch(e) { console.warn('공휴일 로드 실패', y); }
   }
 }
 
@@ -304,7 +259,7 @@ async function apiPost(body) {
 // ── 초기화 ────────────────────────────────────
 async function init() {
   try {
-    await loadUSHolidays(new Date().getFullYear());
+    await loadHolidays();
     [employees, settings] = await Promise.all([apiGet('getEmployees'), apiGet('getSettings')]);
     renderEmpGrid();
   } catch(e) {
@@ -323,90 +278,82 @@ function renderEmpGrid() {
     </button>`).join('');
 }
 
-// ── 로그인 ────────────────────────────────────
-async function empLogin(name) {
-  me = name; isAdmin = false; await enterMain();
-}
+async function empLogin(name) { me=name; isAdmin=false; await enterMain(); }
 
 async function adminLogin() {
   const pw = document.getElementById('admin-pw').value;
   const adminPw = settings['관리자비밀번호'] || 'jnfam2026';
-  if (pw !== adminPw) { document.getElementById('login-err').textContent = '❌ 비밀번호가 틀렸습니다'; return; }
-  const adminEmp = employees.find(e => e.isAdmin === 'Y');
-  me = adminEmp ? adminEmp.name : '관리자'; isAdmin = true; await enterMain();
+  if (pw !== adminPw) { document.getElementById('login-err').textContent='❌ 비밀번호가 틀렸습니다'; return; }
+  const adminEmp = employees.find(e => e.isAdmin==='Y');
+  me = adminEmp ? adminEmp.name : '관리자'; isAdmin=true; await enterMain();
 }
 
 async function enterMain() {
   leaves = await apiGet('getLeaves');
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('main-screen').style.display = 'block';
-  document.getElementById('hd-name').textContent = me;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-screen').style.display='block';
+  document.getElementById('hd-name').textContent=me;
   document.getElementById('hd-badge').innerHTML = isAdmin
     ? '<span class="badge badge-admin">👑 관리자</span>'
     : '<span class="badge badge-user">직원</span>';
-  activeTab = 0;
-  renderMain();
+  activeTab=0; renderMain();
 }
 
 function logout() {
-  me = null; isAdmin = false;
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('main-screen').style.display = 'none';
-  document.getElementById('admin-pw').value = '';
-  document.getElementById('login-err').textContent = '';
+  me=null; isAdmin=false;
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('main-screen').style.display='none';
+  document.getElementById('admin-pw').value='';
+  document.getElementById('login-err').textContent='';
 }
 
-// ── 메인 ──────────────────────────────────────
 function renderMain() { renderStats(); renderTabs(); renderTabContent(); }
 
 function renderStats() {
-  const emp = employees.find(e => e.name === me) || {};
-  let html = '';
+  const emp = employees.find(e=>e.name===me)||{};
+  let html='';
   if (isAdmin) {
-    const pending = leaves.filter(l => l.status === '대기').length;
-    const approved = leaves.filter(l => l.status === '승인').length;
-    html = `
+    const pending=leaves.filter(l=>l.status==='대기').length;
+    const approved=leaves.filter(l=>l.status==='승인').length;
+    html=`
       <div class="stat st-o"><div class="lbl">승인 대기</div><div class="val" style="color:var(--orange)">${pending}</div><div class="sub">건</div></div>
       <div class="stat st-g"><div class="lbl">승인 완료</div><div class="val" style="color:var(--green)">${approved}</div><div class="sub">건</div></div>
       <div class="stat st-b"><div class="lbl">전체 직원</div><div class="val" style="color:var(--accent)">${employees.filter(e=>e.isAdmin!=='Y').length}</div><div class="sub">명</div></div>
       <div class="stat st-r"><div class="lbl">전체 신청</div><div class="val" style="color:var(--red)">${leaves.length}</div><div class="sub">건</div></div>`;
   } else {
-    const total = Number(emp.totalDays)||0, used = Number(emp.usedDays)||0, remain = Number(emp.remainDays)||0;
-    const pending = leaves.filter(l => l.name===me && l.status==='대기').length;
-    html = `
+    const total=Number(emp.totalDays)||0, used=Number(emp.usedDays)||0, remain=Number(emp.remainDays)||0;
+    const pending=leaves.filter(l=>l.name===me&&l.status==='대기').length;
+    html=`
       <div class="stat st-b"><div class="lbl">총 연차</div><div class="val" style="color:var(--accent)">${total}</div><div class="sub">일</div></div>
       <div class="stat st-r"><div class="lbl">사용</div><div class="val" style="color:var(--red)">${used}</div><div class="sub">일</div></div>
       <div class="stat st-g"><div class="lbl">잔여</div><div class="val" style="color:var(--green)">${remain}</div><div class="sub">일</div></div>
       <div class="stat st-o"><div class="lbl">대기중</div><div class="val" style="color:var(--orange)">${pending}</div><div class="sub">건</div></div>`;
   }
-  document.getElementById('stats').innerHTML = html;
+  document.getElementById('stats').innerHTML=html;
 }
 
 function renderTabs() {
-  const tabs = isAdmin
-    ? ['📋 승인 대기', '📅 전체 내역', '🗓 캘린더', '👥 직원 현황']
-    : ['✉️ 휴가 신청', '📋 내 내역', '🗓 팀 캘린더'];
-  document.getElementById('tabs').innerHTML = tabs.map((t,i) =>
-    `<button class="tab ${activeTab===i?'active':''}" onclick="setTab(${i})">${t}</button>`).join('');
+  const tabs=isAdmin?['📋 승인 대기','📅 전체 내역','🗓 캘린더','👥 직원 현황']:['✉️ 휴가 신청','📋 내 내역','🗓 팀 캘린더'];
+  document.getElementById('tabs').innerHTML=tabs.map((t,i)=>`<button class="tab ${activeTab===i?'active':''}" onclick="setTab(${i})">${t}</button>`).join('');
 }
 
-function setTab(i) { activeTab = i; renderTabs(); renderTabContent(); }
+function setTab(i) { activeTab=i; renderTabs(); renderTabContent(); }
 
 function renderTabContent() {
-  const el = document.getElementById('tab-content');
+  const el=document.getElementById('tab-content');
   if (isAdmin) {
-    if (activeTab === 0) el.innerHTML = renderPending();
-    else if (activeTab === 1) el.innerHTML = renderAllLeaves();
-    else if (activeTab === 2) { el.innerHTML = renderCalHtml(); renderCal(); }
-    else el.innerHTML = renderEmpStatus();
+    if (activeTab===0) el.innerHTML=renderPending();
+    else if (activeTab===1) el.innerHTML=renderAllLeaves();
+    else if (activeTab===2) { el.innerHTML=renderCalHtml(); renderCal(); }
+    else el.innerHTML=renderEmpStatus();
   } else {
-    if (activeTab === 0) el.innerHTML = renderForm();
-    else if (activeTab === 1) el.innerHTML = renderMyLeaves();
-    else { el.innerHTML = renderCalHtml(); renderCal(); }
+    if (activeTab===0) el.innerHTML=renderForm();
+    else if (activeTab===1) el.innerHTML=renderMyLeaves();
+    else { el.innerHTML=renderCalHtml(); renderCal(); }
   }
 }
 
-// ── 휴가 신청 폼 ──────────────────────────────
+// ── 신청 폼 ───────────────────────────────────
 function renderForm() {
   return `<div class="card">
     <div class="card-hd"><h3>✉️ 휴가 신청</h3>
@@ -414,112 +361,73 @@ function renderForm() {
     </div>
     <div class="card-bd">
       <div class="fgrid">
-        <div class="fg">
-          <label>휴가 종류</label>
-          <select id="f-type" onchange="updateDaysPreview()">
+        <div class="fg"><label>휴가 종류</label>
+          <select id="f-type" onchange="updatePreview()">
             <option>연차</option><option>반차(오전)</option><option>반차(오후)</option><option>병가</option><option>기타</option>
           </select>
         </div>
-        <div class="fg">
-          <label>시작일</label>
-          <input type="date" id="f-start" oninput="updateDaysPreview()">
-        </div>
-        <div class="fg" id="end-wrap">
-          <label>종료일</label>
-          <input type="date" id="f-end" oninput="updateDaysPreview()">
-        </div>
-        <div class="fg">
-          <label>계산된 영업일</label>
-          <div class="days-preview" id="days-preview">날짜를 선택하면 자동 계산됩니다</div>
-        </div>
-        <div class="fg ff">
-          <label>사유</label>
-          <textarea id="f-reason" placeholder="사유 입력 (선택)"></textarea>
-        </div>
+        <div class="fg"><label>시작일</label><input type="date" id="f-start" oninput="updatePreview()"></div>
+        <div class="fg" id="end-wrap"><label>종료일</label><input type="date" id="f-end" oninput="updatePreview()"></div>
+        <div class="fg"><label>계산된 영업일</label><div class="days-preview" id="days-preview">날짜를 선택하면 자동 계산됩니다</div></div>
+        <div class="fg ff"><label>사유</label><textarea id="f-reason" placeholder="사유 입력 (선택)"></textarea></div>
       </div>
       <div class="fa"><button class="btn btn-p" onclick="submitLeave()">신청하기</button></div>
     </div>
   </div>`;
 }
 
-function updateDaysPreview() {
-  const type = document.getElementById('f-type')?.value || '';
-  const start = document.getElementById('f-start')?.value;
-  const isHalf = type.includes('반차');
-
-  // 반차면 종료일 숨김
-  const endWrap = document.getElementById('end-wrap');
-  if (endWrap) endWrap.style.display = isHalf ? 'none' : '';
-
-  const end = isHalf ? start : document.getElementById('f-end')?.value;
-  const preview = document.getElementById('days-preview');
+function updatePreview() {
+  const type=document.getElementById('f-type')?.value||'';
+  const start=document.getElementById('f-start')?.value;
+  const isHalf=type.includes('반차');
+  const endWrap=document.getElementById('end-wrap');
+  if (endWrap) endWrap.style.display=isHalf?'none':'';
+  const end=isHalf?start:document.getElementById('f-end')?.value;
+  const preview=document.getElementById('days-preview');
   if (!preview) return;
-
-  if (!start) { preview.textContent = '날짜를 선택하면 자동 계산됩니다'; return; }
-  if (isHalf) { preview.textContent = '0.5일 (반차)'; return; }
-  if (!end) { preview.textContent = '종료일을 선택해주세요'; return; }
-  if (end < start) { preview.textContent = '❌ 종료일이 시작일보다 빠릅니다'; return; }
-
-  const days = calcBusinessDays(start, end, type);
-  const hdays = getHolidaysInRange(start, end);
-  let text = `📅 총 ${days}일 (영업일 기준)`;
-  if (hdays.length > 0) text += ` · 공휴일 ${hdays.length}일 제외`;
-  preview.textContent = text;
-}
-
-function getHolidaysInRange(startStr, endStr) {
-  const result = [];
-  const start = parseDate(startStr), end = parseDate(endStr);
-  if (!start || !end) return result;
-  const cur = new Date(start);
-  while (cur <= end) {
-    const ds = toDateStr(cur);
-    if (usHolidays[ds]) result.push({date: ds, name: usHolidays[ds]});
-    cur.setDate(cur.getDate()+1);
-  }
-  return result;
+  if (!start) { preview.textContent='날짜를 선택하면 자동 계산됩니다'; return; }
+  if (isHalf) { preview.textContent='0.5일 (반차)'; return; }
+  if (!end) { preview.textContent='종료일을 선택해주세요'; return; }
+  if (end < start) { preview.textContent='❌ 종료일이 시작일보다 빠릅니다'; return; }
+  const days=calcBusinessDays(start, end, type);
+  const hInRange=Object.keys(usHolidays).filter(d=>d>=start&&d<=end).length;
+  preview.textContent=`📅 총 ${days}일 (영업일 기준)${hInRange>0?' · 공휴일 '+hInRange+'일 제외':''}`;
 }
 
 async function submitLeave() {
-  const type = document.getElementById('f-type').value;
-  const start = document.getElementById('f-start').value;
-  const isHalf = type.includes('반차');
-  const end = isHalf ? start : (document.getElementById('f-end')?.value || start);
-  const reason = document.getElementById('f-reason').value;
-
+  const type=document.getElementById('f-type').value;
+  const start=document.getElementById('f-start').value;
+  const isHalf=type.includes('반차');
+  const end=isHalf?start:(document.getElementById('f-end')?.value||start);
+  const reason=document.getElementById('f-reason').value;
   if (!start) { toast('❌ 시작일을 입력해주세요'); return; }
-  if (!isHalf && end < start) { toast('❌ 종료일이 시작일보다 빠릅니다'); return; }
-
-  const days = calcBusinessDays(start, end, type);
-  if (days === 0) { toast('❌ 선택한 기간에 영업일이 없어요 (주말/공휴일만 포함)'); return; }
-
+  if (!isHalf&&end<start) { toast('❌ 종료일이 시작일보다 빠릅니다'); return; }
+  const days=calcBusinessDays(start, end, type);
+  if (days===0) { toast('❌ 선택한 기간에 영업일이 없어요'); return; }
   try {
-    const res = await apiPost({action:'applyLeave', name:me, type, startDate:start, endDate:end, days, reason});
-    if (res.success) {
-      toast('✅ 휴가 신청이 완료됐어요!');
-      leaves = await apiGet('getLeaves');
-      renderStats(); setTab(1);
-    } else { toast('❌ 신청 실패'); }
+    const res=await apiPost({action:'applyLeave',name:me,type,startDate:start,endDate:end,days,reason});
+    if (res.success) { toast('✅ 휴가 신청이 완료됐어요!'); leaves=await apiGet('getLeaves'); renderStats(); setTab(1); }
+    else toast('❌ 신청 실패');
   } catch(e) { toast('❌ 오류가 발생했어요'); }
 }
 
 // ── 내 내역 ───────────────────────────────────
 function renderMyLeaves() {
-  const my = leaves.filter(l => l.name === me).reverse();
+  const my=leaves.filter(l=>l.name===me).reverse();
   if (!my.length) return `<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>신청 내역이 없어요</p></div></div></div>`;
   return `<div class="card">
     <div class="card-hd"><h3>📋 내 신청 내역</h3><span style="font-size:12px;color:var(--text3)">${my.length}건</span></div>
-    <div class="card-bd"><div class="llist">${my.map(l => `
+    <div class="card-bd"><div class="llist">${my.map(l=>`
       <div class="litem">
         <div class="li-left">
           <div class="li-title">${l.type} · ${l.days}일</div>
-          <div class="li-meta">${fmtDate(l.startDate)} ~ ${fmtDate(l.endDate)} · 신청: ${fmtDate(l.applyDate)}</div>
-          ${l.reason ? `<div style="font-size:11px;color:var(--text2);margin-top:2px">사유: ${l.reason}</div>` : ''}
-          ${l.note ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 ${l.note}</div>` : ''}
+          <div class="li-meta">${fmtDisplay(l.startDate)} ~ ${fmtDisplay(l.endDate)} · 신청: ${fmtDisplay(l.applyDate)}</div>
+          ${l.reason?`<div style="font-size:11px;color:var(--text2);margin-top:2px">사유: ${l.reason}</div>`:''}
+          ${l.note?`<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 ${l.note}</div>`:''}
         </div>
         <div class="li-act">
           <span class="sbadge s${l.status}">${l.status}</span>
-          ${l.status==='대기' ? `<button class="btn btn-o btn-sm" onclick="cancelLeave('${l.id}')">취소</button>` : ''}
+          ${l.status==='대기'?`<button class="btn btn-o btn-sm" onclick="cancelLeave('${l.id}')">취소</button>`:''}
         </div>
       </div>`).join('')}
     </div></div>
@@ -528,26 +436,22 @@ function renderMyLeaves() {
 
 async function cancelLeave(id) {
   if (!confirm('이 신청을 취소할까요?')) return;
-  const res = await apiPost({action:'cancelLeave', id, name:me});
-  if (res.success) {
-    toast('✅ 취소됐어요');
-    leaves = await apiGet('getLeaves');
-    renderStats(); renderTabContent();
-  }
+  const res=await apiPost({action:'cancelLeave',id,name:me});
+  if (res.success) { toast('✅ 취소됐어요'); leaves=await apiGet('getLeaves'); renderStats(); renderTabContent(); }
 }
 
 // ── 관리자: 승인 대기 ─────────────────────────
 function renderPending() {
-  const p = leaves.filter(l => l.status === '대기').reverse();
+  const p=leaves.filter(l=>l.status==='대기').reverse();
   if (!p.length) return `<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">✅</div><p>대기 중인 신청이 없어요</p></div></div></div>`;
   return `<div class="card">
     <div class="card-hd"><h3>📋 승인 대기</h3><span style="font-size:12px;color:var(--orange);font-weight:700">${p.length}건</span></div>
-    <div class="card-bd"><div class="llist">${p.map(l => `
+    <div class="card-bd"><div class="llist">${p.map(l=>`
       <div class="litem">
         <div class="li-left">
           <div class="li-title">👤 ${l.name} · ${l.type} · ${l.days}일</div>
-          <div class="li-meta">${fmtDate(l.startDate)} ~ ${fmtDate(l.endDate)} · 신청: ${fmtDate(l.applyDate)}</div>
-          ${l.reason ? `<div style="font-size:11px;color:var(--text2);margin-top:2px">사유: ${l.reason}</div>` : ''}
+          <div class="li-meta">${fmtDisplay(l.startDate)} ~ ${fmtDisplay(l.endDate)} · 신청: ${fmtDisplay(l.applyDate)}</div>
+          ${l.reason?`<div style="font-size:11px;color:var(--text2);margin-top:2px">사유: ${l.reason}</div>`:''}
         </div>
         <div class="li-act">
           <button class="btn btn-s btn-sm" onclick="openModal('${l.id}','${l.name}','${l.type}','${l.days}')">승인</button>
@@ -560,16 +464,16 @@ function renderPending() {
 
 // ── 관리자: 전체 내역 ─────────────────────────
 function renderAllLeaves() {
-  const all = [...leaves].reverse();
+  const all=[...leaves].reverse();
   if (!all.length) return `<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>신청 내역이 없어요</p></div></div></div>`;
   return `<div class="card">
     <div class="card-hd"><h3>📅 전체 내역</h3><span style="font-size:12px;color:var(--text3)">${all.length}건</span></div>
-    <div class="card-bd"><div class="llist">${all.map(l => `
+    <div class="card-bd"><div class="llist">${all.map(l=>`
       <div class="litem">
         <div class="li-left">
           <div class="li-title">👤 ${l.name} · ${l.type} · ${l.days}일</div>
-          <div class="li-meta">${fmtDate(l.startDate)} ~ ${fmtDate(l.endDate)} · 신청: ${fmtDate(l.applyDate)}${l.processDate?' · 처리: '+fmtDate(l.processDate):''}</div>
-          ${l.note ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 ${l.note}</div>` : ''}
+          <div class="li-meta">${fmtDisplay(l.startDate)} ~ ${fmtDisplay(l.endDate)} · 신청: ${fmtDisplay(l.applyDate)}${l.processDate?' · 처리: '+fmtDisplay(l.processDate):''}</div>
+          ${l.note?`<div style="font-size:11px;color:var(--text3);margin-top:2px">📝 ${l.note}</div>`:''}
         </div>
         <span class="sbadge s${l.status}">${l.status}</span>
       </div>`).join('')}
@@ -579,25 +483,22 @@ function renderAllLeaves() {
 
 // ── 관리자: 직원 현황 ─────────────────────────
 function renderEmpStatus() {
-  const emps = employees.filter(e => e.isAdmin !== 'Y');
+  const emps=employees.filter(e=>e.isAdmin!=='Y');
   return `<div class="card">
     <div class="card-hd"><h3>👥 직원 연차 현황</h3></div>
     <div class="card-bd" style="padding:0">
       <table class="etable">
         <thead><tr><th>직원명</th><th>총 연차</th><th>사용</th><th>잔여</th><th>사용률</th></tr></thead>
-        <tbody>${emps.map(e => {
-          const total = Number(e.totalDays)||0, used = Number(e.usedDays)||0, remain = Number(e.remainDays)||0;
-          const pct = total ? Math.min(100, Math.round(used/total*100)) : 0;
-          const color = pct>80?'var(--red)':pct>50?'var(--orange)':'var(--accent)';
+        <tbody>${emps.map(e=>{
+          const total=Number(e.totalDays)||0,used=Number(e.usedDays)||0,remain=Number(e.remainDays)||0;
+          const pct=total?Math.min(100,Math.round(used/total*100)):0;
+          const color=pct>80?'var(--red)':pct>50?'var(--orange)':'var(--accent)';
           return `<tr>
             <td style="font-weight:700">${e.name}</td>
             <td>${total}일</td>
             <td style="color:var(--red)">${used}일</td>
             <td style="color:var(--green);font-weight:700">${remain}일</td>
-            <td style="min-width:120px">
-              <div style="font-size:11px;color:var(--text3);margin-bottom:3px">${pct}%</div>
-              <div class="pbar"><div class="pfill" style="width:${pct}%;background:${color}"></div></div>
-            </td>
+            <td style="min-width:120px"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">${pct}%</div><div class="pbar"><div class="pfill" style="width:${pct}%;background:${color}"></div></div></td>
           </tr>`;
         }).join('')}</tbody>
       </table>
@@ -605,7 +506,7 @@ function renderEmpStatus() {
   </div>`;
 }
 
-// ── 캘린더 (주말 제외, 월~금 5열) ────────────
+// ── 캘린더 ────────────────────────────────────
 function renderCalHtml() {
   return `<div class="card"><div class="card-bd">
     <div class="cal-hd">
@@ -627,92 +528,97 @@ function renderCalHtml() {
 function chMonth(d) { calM+=d; if(calM>11){calM=0;calY++;} if(calM<0){calM=11;calY--;} renderCal(); }
 
 function renderCal() {
-  const titleEl = document.getElementById('cal-title');
-  const grid = document.getElementById('cgrid');
-  if (!titleEl || !grid) return;
-  titleEl.textContent = `${calY}년 ${calM+1}월`;
+  const titleEl=document.getElementById('cal-title');
+  const grid=document.getElementById('cgrid');
+  if (!titleEl||!grid) return;
+  titleEl.textContent=`${calY}년 ${calM+1}월`;
 
-  const COLORS = ['#2563eb','#16a34a','#7c3aed','#ea580c','#dc2626','#0891b2','#d97706','#be185d'];
-  const ec = {};
-  employees.forEach((e,i) => ec[e.name] = COLORS[i%COLORS.length]);
+  const COLORS=['#2563eb','#16a34a','#7c3aed','#ea580c','#dc2626','#0891b2','#d97706','#be185d'];
+  const ec={};
+  employees.forEach((e,i)=>ec[e.name]=COLORS[i%COLORS.length]);
 
-  const days = ['월','화','수','목','금'];
-  let html = days.map(d => `<div class="cdh">${d}</div>`).join('');
+  const todayStr=todayYMD();
+  let html=['월','화','수','목','금'].map(d=>`<div class="cdh">${d}</div>`).join('');
 
-  const today = new Date();
-  const todayStr = toDateStr(today);
+  // 이번 달 첫날
+  const firstDay=new Date(calY, calM, 1);
+  // 해당 주 월요일부터 시작
+  const cur=new Date(firstDay);
+  while (cur.getDay()!==1) cur.setDate(cur.getDate()-1);
 
-  // 이 달의 모든 날짜 중 평일만 추출
-  const firstDay = new Date(calY, calM, 1);
-  const lastDay = new Date(calY, calM+1, 0);
+  // 이번 달 마지막날
+  const lastDay=new Date(calY, calM+1, 0);
+  // 마지막 금요일까지
+  const endBound=new Date(lastDay);
+  while (endBound.getDay()!==5) endBound.setDate(endBound.getDate()+1);
 
-  // 첫 번째 월요일 찾기 (이전 달 포함)
-  const cur = new Date(firstDay);
-  // 월요일(1)이 될 때까지 이전으로
-  while (cur.getDay() !== 1) cur.setDate(cur.getDate()-1);
+  while (cur<=endBound) {
+    const dow=cur.getDay();
+    // 주말 건너뜀
+    if (dow===0||dow===6) { cur.setDate(cur.getDate()+1); continue; }
 
-  // 5주치 렌더링
-  const endBound = new Date(lastDay);
-  while (endBound.getDay() !== 5) endBound.setDate(endBound.getDate()+1);
+    const y=cur.getFullYear();
+    const m=String(cur.getMonth()+1).padStart(2,'0');
+    const d=String(cur.getDate()).padStart(2,'0');
+    const ds=`${y}-${m}-${d}`;
 
-  while (cur <= endBound) {
-    const dow = cur.getDay();
-    if (dow === 0 || dow === 6) { cur.setDate(cur.getDate()+1); continue; } // 주말 skip
-    const ds = toDateStr(cur);
-    const isThisMonth = cur.getMonth() === calM;
-    const isTodayDate = ds === todayStr;
-    const holiday = usHolidays[ds];
+    const isThisMonth=cur.getMonth()===calM;
+    const isToday=ds===todayStr;
+    const holiday=usHolidays[ds];
 
-    const dayLeaves = leaves.filter(l =>
-      l.status === '승인' && l.startDate <= ds && l.endDate >= ds
-    );
-    const tags = dayLeaves.slice(0,4).map(l =>
+    // 승인된 휴가 중 이 날짜 포함하는 것
+    const dayLeaves=leaves.filter(l=>{
+      if (l.status!=='승인') return false;
+      const s=toYMD(l.startDate), e=toYMD(l.endDate);
+      return s<=ds && ds<=e;
+    });
+    const tags=dayLeaves.slice(0,4).map(l=>
       `<div class="ctag" style="background:${ec[l.name]||'#2563eb'}22;color:${ec[l.name]||'#2563eb'}">${l.name}</div>`
     ).join('');
 
-    html += `<div class="cd${!isThisMonth?' om':''}${isTodayDate?' today':''}${holiday?' holiday':''}">
-      ${holiday ? `<div class="hname">🇺🇸 ${holiday}</div>` : ''}
+    html+=`<div class="cd${!isThisMonth?' om':''}${isToday?' today':''}${holiday?' holiday':''}">
+      ${holiday?`<div class="hname">🇺🇸 ${holiday}</div>`:''}
       <div class="dn">${cur.getDate()}</div>
       ${tags}
     </div>`;
+
     cur.setDate(cur.getDate()+1);
   }
 
-  grid.innerHTML = html;
+  grid.innerHTML=html;
 }
 
 // ── 모달 ──────────────────────────────────────
-function openModal(id, name, type, days) {
-  document.getElementById('modal-id').value = id;
-  document.getElementById('modal-note').value = '';
-  document.getElementById('modal-info').innerHTML = `👤 <strong>${name}</strong> · ${type} · <strong>${days}일</strong>`;
+function openModal(id,name,type,days) {
+  document.getElementById('modal-id').value=id;
+  document.getElementById('modal-note').value='';
+  document.getElementById('modal-info').innerHTML=`👤 <strong>${name}</strong> · ${type} · <strong>${days}일</strong>`;
   document.getElementById('modal-wrap').classList.add('open');
 }
 function closeModal() { document.getElementById('modal-wrap').classList.remove('open'); }
 
 async function doProcess(status) {
-  const id = document.getElementById('modal-id').value;
-  const note = document.getElementById('modal-note').value;
+  const id=document.getElementById('modal-id').value;
+  const note=document.getElementById('modal-note').value;
   try {
-    const res = await apiPost({action:'processLeave', id, status, processor:me, note});
+    const res=await apiPost({action:'processLeave',id,status,processor:me,note});
     if (res.success) {
-      toast(status==='승인' ? '✅ 승인됐어요' : '❌ 반려됐어요');
+      toast(status==='승인'?'✅ 승인됐어요':'❌ 반려됐어요');
       closeModal();
-      [leaves, employees] = await Promise.all([apiGet('getLeaves'), apiGet('getEmployees')]);
+      [leaves,employees]=await Promise.all([apiGet('getLeaves'),apiGet('getEmployees')]);
       renderMain();
     }
   } catch(e) { toast('❌ 처리 실패'); }
 }
 
-// ── 토스트 ────────────────────────────────────
 function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2800);
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
 }
 
-document.getElementById('modal-wrap').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal-wrap')) closeModal();
+document.getElementById('modal-wrap').addEventListener('click',e=>{
+  if (e.target===document.getElementById('modal-wrap')) closeModal();
 });
 
 init();
