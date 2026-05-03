@@ -1,670 +1,506 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JNFAM Leave Management</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#f4f6f9;--white:#ffffff;--border:#e0e6ed;--border2:#c8d4e0;
-  --text:#1a2332;--text-dim:#5a7a9a;--text-sub:#8a9ab0;
-  --accent:#1565c0;--accent-l:#e3eeff;
-  --green:#2e7d32;--green-l:#e8f5e9;
-  --yellow:#f57f17;--yellow-l:#fffde7;
-  --red:#c62828;--red-l:#ffebee;
-  --orange:#e65100;--orange-l:#fff3e0;
-  --shadow:0 2px 8px rgba(0,0,0,.08);--shadow-md:0 4px 16px rgba(0,0,0,.12);
+  --bg:#f5f6fa;--white:#fff;--border:#e2e6ef;
+  --accent:#2563eb;--accent-l:#eff4ff;
+  --green:#16a34a;--green-l:#f0fdf4;
+  --red:#dc2626;--red-l:#fef2f2;
+  --orange:#ea580c;--orange-l:#fff7ed;
+  --yellow:#d97706;--yellow-l:#fffbeb;
+  --text:#1e2533;--text2:#5a6478;--text3:#9aa3b5;
+  --shadow:0 1px 4px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.10),0 8px 28px rgba(0,0,0,.08);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;font-size:14px;}
-.header{background:var(--white);border-bottom:2px solid var(--accent);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:38px;height:38px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;}
-.logo-text{font-size:18px;font-weight:700;color:var(--accent);}
-.logo-sub{font-size:11px;color:var(--text-sub);margin-top:1px;}
-.header-right{display:flex;gap:10px;align-items:center;}
-.sync-badge{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text-dim);}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:#bbb;}
-.sync-dot.on{background:var(--green);animation:pulse 2s infinite;}
-.sync-dot.ing{background:var(--yellow);animation:pulse .5s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.mode-switch{display:flex;gap:8px;}
-.mode-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
-.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;}
-.tab{padding:12px 20px;border:none;background:transparent;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
-.tab:hover{color:var(--accent);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700;}
-.main{max-width:1300px;margin:0 auto;padding:24px 28px;}
-.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
-.card-title{font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow);border-top:4px solid var(--accent);}
-.stat-card.g{border-top-color:var(--green);}
-.stat-card.y{border-top-color:var(--yellow);}
-.stat-card.r{border-top-color:var(--red);}
-.stat-lbl{font-size:11px;color:var(--text-sub);font-weight:600;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
-.stat-val{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);}
-.stat-card.g .stat-val{color:var(--green);}.stat-card.y .stat-val{color:var(--yellow);}.stat-card.r .stat-val{color:var(--red);}
-.stat-sub{font-size:11px;color:var(--text-sub);margin-top:4px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
-.form-grid.three{grid-template-columns:1fr 1fr 1fr;}
-.form-grid.one{grid-template-columns:1fr;}
-.form-label{font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;margin-bottom:5px;text-transform:uppercase;}
-.form-input,.form-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;transition:border-color .2s;}
-.form-input:focus,.form-select:focus{outline:none;border-color:var(--accent);background:var(--white);}
-.form-hint{font-size:11px;color:var(--text-sub);margin-top:3px;}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
-.btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:#0d47a1;}
-.btn-secondary{background:var(--white);border:1px solid var(--border);color:var(--text);}.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
-.btn-success{background:var(--green);color:#fff;}.btn-success:hover{background:#1b5e20;}
-.btn-danger{background:var(--red);color:#fff;}.btn-danger:hover{background:#b71c1c;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(0,0,0,.06);}
+.logo{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:8px;}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;}
+.logo span{color:var(--text3);font-weight:400;}
+.user-info{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);}
+.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;}
+.badge-user{background:var(--accent);}
+.badge-admin{background:var(--orange);}
+.btn-logout{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.btn-logout:hover{background:var(--bg);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
+.btn-p{background:var(--accent);color:#fff;}.btn-p:hover{background:#1d4ed8;}
+.btn-s{background:var(--green);color:#fff;}.btn-s:hover{background:#15803d;}
+.btn-d{background:var(--red);color:#fff;}.btn-d:hover{background:#b91c1c;}
+.btn-o{background:var(--white);color:var(--text2);border:1.5px solid var(--border);}.btn-o:hover{background:var(--bg);}
 .btn-sm{padding:5px 12px;font-size:12px;}
-.table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;}
-th{background:var(--bg);padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;border-bottom:2px solid var(--border);text-transform:uppercase;}
-td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:#fafbfc;}
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
-.b-wait{background:var(--yellow-l);color:var(--yellow);}
-.b-ok{background:var(--green-l);color:var(--green);}
-.b-no{background:var(--red-l);color:var(--red);}
-.b-cancel{background:var(--bg);color:var(--text-sub);border:1px solid var(--border);}
-.type-chip{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;}
-.t-annual{background:var(--accent-l);color:var(--accent);}
-.t-half{background:#e8eaf6;color:#3949ab;}
-.t-sick{background:var(--red-l);color:var(--red);}
-.t-special{background:var(--orange-l);color:var(--orange);}
-.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.nav-btn{width:32px;height:32px;border-radius:8px;background:var(--white);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
-.cal-title{font-size:18px;font-weight:700;min-width:160px;}
-.cal-wrap{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
-.cal-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg);border-bottom:1px solid var(--border);}
-.cal-dow{padding:10px 0;text-align:center;font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;}
-.cal-dow.sat{color:var(--accent);}.cal-dow.sun{color:var(--red);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
-.cal-day{min-height:100px;padding:7px 6px 4px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
-.cal-day:nth-child(7n){border-right:none;}
-.cal-day:hover{background:#f8faff;}
-.cal-day.other{opacity:.25;}.cal-day.today{background:var(--accent-l);}
-.cal-day.sat .day-num span{color:var(--accent);}.cal-day.sun .day-num span{color:var(--red);}
-.day-num{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;}
-.today-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
-.lchip{display:block;padding:2px 5px;border-radius:3px;font-size:10px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lchip-ok{background:var(--green-l);color:var(--green);}
-.lchip-wait{background:var(--yellow-l);color:var(--yellow);}
-.emp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.emp-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow);}
-.emp-name{font-size:14px;font-weight:700;margin-bottom:3px;}
-.emp-sub{font-size:11px;color:var(--text-sub);margin-bottom:12px;}
-.leave-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:4px 0;}
-.leave-fill{height:100%;border-radius:3px;transition:width .5s;}
-.toast{position:fixed;bottom:24px;right:24px;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:700;transform:translateY(60px);opacity:0;transition:all .3s;z-index:300;box-shadow:var(--shadow-md);}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.ok{background:var(--green);color:#fff;}
-.toast.err{background:var(--red);color:#fff;}
-.toast.info{background:var(--accent);color:#fff;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;}
-.modal-overlay.show{display:flex;}
-.modal{background:var(--white);border-radius:16px;width:480px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-md);animation:slideUp .2s ease;}
-@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-title{font-size:16px;font-weight:700;}
-.modal-close{background:none;border:none;color:var(--text-sub);font-size:22px;cursor:pointer;padding:2px 8px;border-radius:6px;}
-.modal-close:hover{background:var(--bg);}
-.modal-body{padding:20px 22px;}
-.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
-.page{display:none;}.page.active{display:block;}
-.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.sec-title{font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;}
-.sec-line{flex:1;height:1px;background:var(--border);}
-.info-box{border-radius:8px;padding:14px;margin-bottom:16px;font-size:13px;}
-.info-blue{background:var(--accent-l);border:1px solid var(--accent);color:var(--accent);}
-.info-green{background:var(--green-l);border:1px solid var(--green);color:var(--green);}
-code{background:var(--bg);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;}
-@media(max-width:900px){.stat-grid{grid-template-columns:1fr 1fr}.emp-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.stat-grid{grid-template-columns:1fr}.emp-grid{grid-template-columns:1fr}.form-grid,.form-grid.three{grid-template-columns:1fr}}
+.container{max-width:1100px;margin:0 auto;padding:32px 24px;}
+
+/* 로그인 */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.login-card{background:var(--white);border-radius:16px;padding:40px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);border:1px solid var(--border);}
+.login-card h1{font-size:22px;font-weight:900;margin-bottom:4px;}
+.login-card .sub{font-size:13px;color:var(--text2);margin-bottom:24px;}
+.emp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.emp-btn{padding:14px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;text-align:center;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
+.emp-btn:hover{border-color:var(--accent);background:var(--accent-l);}
+.emp-btn .en{font-size:14px;font-weight:700;color:var(--text);}
+.emp-btn .er{font-size:11px;color:var(--text3);margin-top:3px;}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--text3);font-size:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.admin-row{display:flex;gap:8px;}
+.admin-row input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;}
+.admin-row input:focus{border-color:var(--accent);}
+
+/* 통계 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat{background:var(--white);border-radius:12px;padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.stat .lbl{font-size:11px;color:var(--text3);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.stat .val{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;}
+.stat .sub{font-size:11px;color:var(--text3);margin-top:4px;}
+.st-b{border-top:3px solid var(--accent);}
+.st-g{border-top:3px solid var(--green);}
+.st-o{border-top:3px solid var(--orange);}
+.st-r{border-top:3px solid var(--red);}
+
+/* 탭 */
+.tabs{display:flex;gap:4px;background:var(--white);border-radius:10px;padding:4px;margin-bottom:24px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.tab{flex:1;text-align:center;padding:9px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--text3);font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
+.tab.active{background:var(--accent);color:#fff;}
+
+/* 카드 */
+.card{background:var(--white);border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px;}
+.card-hd{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-hd h3{font-size:15px;font-weight:700;}
+.card-bd{padding:22px;}
+
+/* 폼 */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ff{grid-column:1/-1;}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .15s;background:var(--white);color:var(--text);}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
+.fg textarea{resize:vertical;min-height:72px;}
+.fa{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
+
+/* 목록 */
+.llist{display:flex;flex-direction:column;gap:10px;}
+.litem{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;}
+.li-left{flex:1;min-width:0;}
+.li-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.li-meta{font-size:12px;color:var(--text2);}
+.li-act{display:flex;gap:6px;flex-shrink:0;align-items:center;}
+.sbadge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.s대기{background:var(--yellow-l);color:var(--yellow);}
+.s승인{background:var(--green-l);color:var(--green);}
+.s반려{background:var(--red-l);color:var(--red);}
+.s취소{background:var(--bg);color:var(--text3);border:1px solid var(--border);}
+
+/* 캘린더 */
+.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-nav{display:flex;gap:6px;}
+.cal-nav button{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.cal-nav button:hover{background:var(--bg);}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cdh{text-align:center;font-size:11px;font-weight:700;color:var(--text3);padding:6px 0;}
+.cd{min-height:72px;border-radius:8px;padding:6px;border:1px solid var(--border);background:var(--white);font-size:12px;}
+.cd.om{background:var(--bg);opacity:.5;}
+.cd.today{border-color:var(--accent);background:var(--accent-l);}
+.cd .dn{font-weight:700;font-size:13px;margin-bottom:3px;}
+.cd.sun .dn{color:var(--red);}
+.cd.sat .dn{color:var(--accent);}
+.ctag{font-size:10px;padding:2px 5px;border-radius:4px;margin-top:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* 직원현황 테이블 */
+.etable{width:100%;border-collapse:collapse;font-size:13px;}
+.etable th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--text3);border-bottom:1px solid var(--border);text-transform:uppercase;}
+.etable td{padding:12px 14px;border-bottom:1px solid var(--border);}
+.etable tr:last-child td{border-bottom:none;}
+.pbar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:4px;}
+.pfill{height:100%;border-radius:3px;}
+
+/* 빈상태 */
+.empty{text-align:center;padding:48px;color:var(--text3);}
+.empty-icon{font-size:36px;margin-bottom:10px;}
+
+/* 모달 */
+#modal-wrap{display:none;position:fixed;inset:0;background:rgba(30,37,51,.5);z-index:2000;align-items:center;justify-content:center;}
+#modal-wrap.open{display:flex;}
+.modal{background:var(--white);border-radius:14px;padding:28px;width:100%;max-width:460px;margin:24px;box-shadow:0 8px 40px rgba(0,0,0,.14);}
+.modal h3{font-size:17px;font-weight:800;margin-bottom:16px;}
+.modal-act{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;}
+
+/* 스피너/토스트 */
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;border-radius:10px;padding:13px 20px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .25s;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.18);}
+#toast.show{transform:translateY(0);opacity:1;}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr;}.fgrid{grid-template-columns:1fr;}header{padding:0 16px;}.container{padding:16px;}.emp-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="logo">
-    <div class="logo-icon">🌴</div>
-    <div>
-      <div class="logo-text">JNFAM Leave Management</div>
-      <div class="logo-sub">LEAVE REQUEST & APPROVAL SYSTEM · Real-time Sync</div>
+<!-- 로그인 -->
+<div id="login-screen">
+  <div class="login-card">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <div style="width:8px;height:8px;background:var(--accent);border-radius:50%"></div>JNFAM<span style="color:var(--text3);font-weight:400">/leave</span>
     </div>
-  </div>
-  <div class="header-right">
-    <div class="sync-badge">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncText">Connecting...</span>
-    </div>
-    <div class="mode-switch">
-      <button class="mode-btn active" onclick="setMode('emp',this)">👤 Employee</button>
-      <button class="mode-btn" onclick="setMode('admin',this)">🔑 Admin</button>
-    </div>
-  </div>
-</div>
-
-<div class="tabs">
-  <button class="tab active" onclick="showTab('calendar',this)">📅 Leave Calendar</button>
-  <button class="tab" onclick="showTab('apply',this)">✍️ Request Leave</button>
-  <button class="tab" onclick="showTab('mylist',this)">📋 My Leave Status</button>
-  <button class="tab admin-only" style="display:none" onclick="showTab('approve',this)">✅ Approve Requests</button>
-  <button class="tab admin-only" style="display:none" onclick="showTab('employees',this)">👥 Employees</button>
-  <button class="tab admin-only" style="display:none" onclick="showTab('settings',this)">⚙️ Email Settings</button>
-</div>
-
-<div class="main">
-
-  <!-- CALENDAR -->
-  <div id="tab-calendar" class="page active">
-    <div class="stat-grid" id="calStats"></div>
-    <div class="cal-nav">
-      <button class="nav-btn" onclick="changeCalMonth(-1)">‹</button>
-      <div class="cal-title" id="calTitle"></div>
-      <button class="nav-btn" onclick="changeCalMonth(1)">›</button>
-    </div>
-    <div class="cal-wrap">
-      <div class="cal-head">
-        <div class="cal-dow">MON</div><div class="cal-dow">TUE</div><div class="cal-dow">WED</div>
-        <div class="cal-dow">THU</div><div class="cal-dow">FRI</div>
-        <div class="cal-dow sat">SAT</div><div class="cal-dow sun">SUN</div>
-      </div>
-      <div class="cal-grid" id="calGrid"></div>
-    </div>
-  </div>
-
-  <!-- REQUEST LEAVE -->
-  <div id="tab-apply" class="page">
-    <div class="card">
-      <div class="card-title">✍️ Leave Request Form</div>
-      <div class="form-grid">
-        <div><div class="form-label">Employee Name *</div><input class="form-input" id="ap-name" placeholder="Your full name" oninput="updateDays()"/></div>
-        <div><div class="form-label">Department</div><input class="form-input" id="ap-dept" placeholder="Your department"/></div>
-      </div>
-      <div class="form-grid three">
-        <div>
-          <div class="form-label">Leave Type *</div>
-          <select class="form-select" id="ap-type" onchange="updateDays()">
-            <option value="Annual Leave">Annual Leave</option>
-            <option value="Half Day (AM)">Half Day (AM)</option>
-            <option value="Half Day (PM)">Half Day (PM)</option>
-            <option value="Sick Leave">Sick Leave</option>
-            <option value="Special Leave">Special Leave</option>
-          </select>
-        </div>
-        <div><div class="form-label">Start Date *</div><input class="form-input" type="date" id="ap-start" onchange="updateDays()"/></div>
-        <div><div class="form-label">End Date *</div><input class="form-input" type="date" id="ap-end" onchange="updateDays()"/></div>
-      </div>
-      <div class="form-grid">
-        <div>
-          <div class="form-label">Days Requested</div>
-          <input class="form-input" id="ap-days" readonly style="background:var(--bg);font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace"/>
-          <div class="form-hint" id="ap-hint"></div>
-        </div>
-        <div><div class="form-label">Reason (Optional)</div><input class="form-input" id="ap-reason" placeholder="Brief reason for leave"/></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="applyLeave()">📨 Submit Request</button>
-        <span id="emailBadge" style="font-size:12px;color:var(--text-sub)">* Approval notification will be sent to ytkang@jnfgroup.net</span>
+    <h1>휴가 관리 시스템</h1>
+    <p class="sub">이름을 선택해서 바로 입장하세요</p>
+    <div class="emp-grid" id="emp-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:24px">
+        <div class="spinner"></div>
+        <div style="font-size:13px;color:var(--text3)">불러오는 중...</div>
       </div>
     </div>
-  </div>
-
-  <!-- MY STATUS -->
-  <div id="tab-mylist" class="page">
-    <div class="card" style="margin-bottom:16px">
-      <div class="form-grid" style="margin-bottom:0">
-        <div><div class="form-label">Search by Name</div><input class="form-input" id="search-name" placeholder="Enter your name to view status" oninput="renderMyList()"/></div>
-        <div style="display:flex;align-items:flex-end"><button class="btn btn-secondary" onclick="renderMyList()">🔍 Search</button></div>
-      </div>
+    <div class="divider">관리자 로그인</div>
+    <div class="admin-row">
+      <input type="password" id="admin-pw" placeholder="관리자 비밀번호" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn btn-o" onclick="adminLogin()">관리자 입장</button>
     </div>
-    <div id="myInfo" style="display:none;margin-bottom:16px"><div class="stat-grid" id="myStats"></div></div>
-    <div class="card">
-      <div class="card-title">📋 My Leave History</div>
-      <div class="table-wrap">
-        <table><thead><tr><th>Type</th><th>Start</th><th>End</th><th>Days</th><th>Reason</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="myBody"></tbody></table>
-      </div>
-    </div>
-  </div>
-
-  <!-- APPROVE -->
-  <div id="tab-approve" class="page">
-    <div class="card">
-      <div class="card-title">⏳ Pending Requests</div>
-      <div class="table-wrap">
-        <table><thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>Period</th><th>Days</th><th>Reason</th><th>Submitted</th><th>Action</th></tr></thead>
-        <tbody id="approveBody"></tbody></table>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">📋 All Leave Records</div>
-      <div class="table-wrap">
-        <table><thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>Period</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="allBody"></tbody></table>
-      </div>
-    </div>
-  </div>
-
-  <!-- EMPLOYEES -->
-  <div id="tab-employees" class="page">
-    <div class="card" style="max-width:520px;margin-bottom:20px">
-      <div class="card-title">👤 Add New Employee</div>
-      <div class="form-grid">
-        <div><div class="form-label">Full Name *</div><input class="form-input" id="emp-name" placeholder="Employee name"/></div>
-        <div><div class="form-label">Department</div><input class="form-input" id="emp-dept" placeholder="Department"/></div>
-      </div>
-      <div class="form-grid">
-        <div><div class="form-label">Annual Leave Days *</div><input class="form-input" type="number" id="emp-total" placeholder="e.g. 15" min="0" max="99"/></div>
-        <div><div class="form-label">Start Date</div><input class="form-input" type="date" id="emp-join"/></div>
-      </div>
-      <button class="btn btn-primary" onclick="addEmployee()">+ Add Employee</button>
-    </div>
-    <div class="sec-hdr"><div class="sec-title">Employee List</div><div class="sec-line"></div></div>
-    <div class="emp-grid" id="empGrid"></div>
-  </div>
-
-  <!-- EMAIL SETTINGS -->
-  <div id="tab-settings" class="page">
-    <div class="card" style="max-width:580px">
-      <div class="card-title">⚙️ Email Notification Setup (EmailJS)</div>
-      <div class="info-box info-blue">
-        <b>📧 One-time setup required</b> — Once configured, employees will automatically notify <b>ytkang@jnfgroup.net</b> when submitting leave requests.
-      </div>
-      <div style="margin-bottom:18px">
-        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Step 1 — Create Free EmailJS Account</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:2">
-          1. Go to <a href="https://www.emailjs.com" target="_blank" style="color:var(--accent);font-weight:600">emailjs.com</a> → <b>Sign Up Free</b><br>
-          2. <b>Email Services</b> → <b>Add New Service</b> → Select <b>Gmail</b><br>
-          3. Connect Gmail → Copy the <b>Service ID</b> (e.g. <code>service_abc123</code>)
-        </div>
-      </div>
-      <div style="margin-bottom:18px">
-        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Step 2 — Create Email Template</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:2">
-          1. <b>Email Templates</b> → <b>Create New Template</b><br>
-          2. <b>To Email:</b> <code>ytkang@jnfgroup.net</code><br>
-          3. <b>Subject:</b> <code>[Leave Request] {{from_name}}</code><br>
-          4. <b>Content:</b> <code>{{message}}</code><br>
-          5. Save → Copy the <b>Template ID</b> (e.g. <code>template_xyz789</code>)
-        </div>
-      </div>
-      <div style="margin-bottom:18px">
-        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Step 3 — Enter Your Keys Below</div>
-        <div class="form-grid one" style="margin-bottom:12px">
-          <div><div class="form-label">Public Key (Account → API Keys)</div><input class="form-input" id="ejs-pub" placeholder="Your EmailJS public key"/></div>
-        </div>
-        <div class="form-grid" style="margin-bottom:12px">
-          <div><div class="form-label">Service ID</div><input class="form-input" id="ejs-svc" placeholder="service_xxxxxxx"/></div>
-          <div><div class="form-label">Template ID</div><input class="form-input" id="ejs-tpl" placeholder="template_xxxxxxx"/></div>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-primary" onclick="saveEmail()">💾 Save Settings</button>
-          <button class="btn btn-secondary" onclick="testEmail()">📧 Send Test Email</button>
-        </div>
-      </div>
-      <div class="info-box info-green">✅ <b>Free plan:</b> 200 emails/month — Sufficient for a team of up to 20 people.</div>
-    </div>
+    <div id="login-err" style="color:var(--red);font-size:12px;margin-top:8px;text-align:center"></div>
   </div>
 </div>
 
-<!-- Admin Password Modal -->
-<div class="modal-overlay" id="pwModal">
-  <div class="modal" style="max-width:360px">
-    <div class="modal-hdr"><div class="modal-title">🔑 Admin Login</div></div>
-    <div class="modal-body">
-      <div class="form-label" style="margin-bottom:8px">Enter Admin Password</div>
-      <input class="form-input" type="password" id="pwInput" placeholder="Password"
-        onkeydown="if(event.key==='Enter')confirmPw()" style="margin-bottom:8px"/>
-      <div id="pwErr" style="display:none;color:var(--red);font-size:12px;font-weight:600">❌ Incorrect password. Please try again.</div>
+<!-- 메인 -->
+<div id="main-screen" style="display:none">
+  <header>
+    <div class="logo"><div class="logo-dot"></div>JNFAM<span>/leave</span></div>
+    <div class="user-info">
+      <span id="hd-name"></span>
+      <span id="hd-badge"></span>
+      <button class="btn-logout" onclick="logout()">로그아웃</button>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="cancelPw()">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmPw()">Login</button>
-    </div>
+  </header>
+  <div class="container">
+    <div class="stats" id="stats"></div>
+    <div class="tabs" id="tabs"></div>
+    <div id="tab-content"></div>
   </div>
 </div>
 
-<!-- Day Detail Modal -->
-<div class="modal-overlay" id="dayModal" onclick="if(event.target===this)this.classList.remove('show')">
+<!-- 모달 -->
+<div id="modal-wrap">
   <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="dayModalTitle"></div>
-      <button class="modal-close" onclick="document.getElementById('dayModal').classList.remove('show')">×</button>
+    <h3>휴가 처리</h3>
+    <input type="hidden" id="modal-id">
+    <div class="fg" style="margin-bottom:12px">
+      <label>처리 메모 (선택)</label>
+      <textarea id="modal-note" placeholder="반려 사유 등"></textarea>
     </div>
-    <div class="modal-body" id="dayModalBody"></div>
+    <div class="modal-act">
+      <button class="btn btn-o" onclick="closeModal()">취소</button>
+      <button class="btn btn-d" onclick="processLeave('반려')">반려</button>
+      <button class="btn btn-s" onclick="processLeave('승인')">승인</button>
+    </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, push, update, remove }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<script>
+const API='https://script.google.com/macros/s/AKfycbyRdAFyS4zhClmX6dLiAAQ9HTrq1PmYPm2nFxfYYAMM7_r-nUFhXOO7tRXUT6U6c2GgOg/exec';
+let me=null,isAdmin=false,employees=[],leaves=[],settings={};
+let calY=new Date().getFullYear(),calM=new Date().getMonth(),activeTab=0;
 
-const firebaseConfig = {
-  apiKey:"AIzaSyBkY5IGIPC0CsJB55hui7wqCffcCiS33NI",
-  authDomain:"jnfam-task-plan.firebaseapp.com",
-  databaseURL:"https://jnfam-task-plan-default-rtdb.firebaseio.com",
-  projectId:"jnfam-task-plan",
-  storageBucket:"jnfam-task-plan.firebasestorage.app",
-  messagingSenderId:"76859256151",
-  appId:"1:76859256151:web:c056fd641305780908e212",
-};
-const db = getDatabase(initializeApp(firebaseConfig));
+async function get(action){const r=await fetch(API+'?action='+action+'&t='+Date.now());return r.json();}
+async function post(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body)});return r.json();}
 
-// Initialize EmailJS immediately with default keys
-emailjs.init('VkhnX-Dm2AWclDpYQ');
-
-// ── State ─────────────────────────────────────────
-let leaves={}, employees={}, curMode='emp';
-let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
-const today=new Date(); today.setHours(0,0,0,0);
-const ADMIN_PW = 'jnfam2026';
-const ADMIN_EMAIL = 'ytkang@jnfgroup.net';
-
-// EmailJS config (localStorage)
-let ejsPub = localStorage.getItem('ejs_pub')||'VkhnX-Dm2AWclDpYQ';
-let ejsSvc = localStorage.getItem('ejs_svc')||'service_fv2oa88';
-let ejsTpl = localStorage.getItem('ejs_tpl')||'template_tmztzep';
-if(ejsPub){ emailjs.init(ejsPub); document.getElementById('ejs-pub').value=ejsPub; }
-if(ejsSvc) document.getElementById('ejs-svc').value=ejsSvc;
-if(ejsTpl) document.getElementById('ejs-tpl').value=ejsTpl;
-
-// ── Firebase ──────────────────────────────────────
-function setSS(s){ const d=document.getElementById('syncDot'),t=document.getElementById('syncText'); d.className='sync-dot'+(s==='on'?' on':s==='ing'?' ing':''); t.textContent=s==='on'?'Live Sync Active':s==='ing'?'Processing...':'Disconnected'; }
-onValue(ref(db,'leaves'),  snap=>{ leaves=snap.val()||{};    setSS('on'); renderCalendar(); renderApprove(); renderMyList(); }, ()=>setSS(''));
-onValue(ref(db,'employees'),snap=>{ employees=snap.val()||{}; renderEmployees(); renderCalStats(); renderMyList(); });
-
-// ── Toast ─────────────────────────────────────────
-function toast(msg,type='ok'){ const t=document.getElementById('toast'); t.textContent=msg; t.className=`toast ${type} show`; setTimeout(()=>t.className='toast',3000); }
-
-// ── Admin ─────────────────────────────────────────
-let _pendBtn=null;
-window.setMode=(m,btn)=>{
-  if(m==='admin'){ _pendBtn=btn; document.getElementById('pwModal').classList.add('show'); document.getElementById('pwInput').value=''; document.getElementById('pwErr').style.display='none'; setTimeout(()=>document.getElementById('pwInput').focus(),100); return; }
-  curMode='emp'; document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-  document.querySelectorAll('.admin-only').forEach(el=>el.style.display='none');
-  showTab('calendar',document.querySelector('.tab'));
-};
-window.confirmPw=()=>{
-  if(document.getElementById('pwInput').value===ADMIN_PW){
-    curMode='admin'; document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); if(_pendBtn)_pendBtn.classList.add('active');
-    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='block');
-    document.getElementById('pwModal').classList.remove('show');
-    showTab('approve',document.querySelectorAll('.tab')[3]); toast('🔑 Admin mode activated','info');
-  } else { document.getElementById('pwErr').style.display='block'; document.getElementById('pwInput').value=''; document.getElementById('pwInput').focus(); }
-};
-window.cancelPw=()=>document.getElementById('pwModal').classList.remove('show');
-
-// ── Tab ───────────────────────────────────────────
-window.showTab=(name,btn)=>{
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active'); btn.classList.add('active');
-  if(name==='approve') renderApprove();
-  if(name==='employees') renderEmployees();
-  if(name==='mylist') renderMyList();
-  if(name==='calendar') renderCalendar();
-};
-
-// ── Email ─────────────────────────────────────────
-window.saveEmail=()=>{
-  ejsPub=document.getElementById('ejs-pub').value.trim();
-  ejsSvc=document.getElementById('ejs-svc').value.trim();
-  ejsTpl=document.getElementById('ejs-tpl').value.trim();
-  if(!ejsPub||!ejsSvc||!ejsTpl){ toast('Please fill all fields','err'); return; }
-  localStorage.setItem('ejs_pub',ejsPub); localStorage.setItem('ejs_svc',ejsSvc); localStorage.setItem('ejs_tpl',ejsTpl);
-  emailjs.init(ejsPub); toast('✅ Email settings saved!');
-};
-window.testEmail=async()=>{
-  if(!ejsPub){ toast('Save EmailJS settings first','err'); return; }
-  toast('📧 Sending test email...','info');
+async function init(){
   try{
-    await emailjs.send(ejsSvc,ejsTpl,{ from_name:'JNFAM Leave System', to_email:ADMIN_EMAIL, leave_type:'Test', message:'This is a test from JNFAM Leave Management. Email notifications are working!' });
-    toast('✅ Test email sent to '+ADMIN_EMAIL);
-  }catch(e){ toast('❌ Email failed: '+JSON.stringify(e),'err'); }
-};
-async function sendEmail(data){
-  if(!ejsPub||!ejsSvc||!ejsTpl) return;
-  try{
-    await emailjs.send(ejsSvc,ejsTpl,{
-      from_name:`${data.name} via JNFAM Leave System`,
-      to_email: ADMIN_EMAIL,
-      leave_type: data.type,
-      message:`New Leave Request\n\nEmployee: ${data.name}\nDepartment: ${data.dept||'N/A'}\nType: ${data.type}\nFrom: ${data.start}\nTo: ${data.end||data.start}\nDays: ${data.days}\nReason: ${data.reason||'Not specified'}\nSubmitted: ${new Date().toLocaleString('en-US')}\n\nApprove at: https://yt9495.github.io/JNFAM-Task-Plan/leave.html`
-    });
-    toast('✅ Notification sent to approver');
-  }catch(e){ console.warn('Email error',e); }
-}
-
-// ── Utils ─────────────────────────────────────────
-function workDays(s,e){ let c=0,d=new Date(s+'T00:00:00'),E=new Date(e+'T00:00:00'); while(d<=E){const w=d.getDay();if(w!==0&&w!==6)c++;d.setDate(d.getDate()+1);}return c; }
-function fmtD(s){ if(!s)return''; return new Date(s+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
-function calcApproved(n){ return Object.values(leaves).filter(l=>l.name===n&&l.status==='Approved').reduce((s,l)=>s+(Number(l.days)||0),0); }
-function calcPending(n){  return Object.values(leaves).filter(l=>l.name===n&&l.status==='Pending').reduce((s,l)=>s+(Number(l.days)||0),0); }
-function getEmp(n){ return Object.values(employees).find(e=>e.name===n); }
-function tClass(t){ return t.includes('Half')?'t-half':t==='Sick Leave'?'t-sick':t==='Special Leave'?'t-special':'t-annual'; }
-
-// ── Days Update ───────────────────────────────────
-window.updateDays=()=>{
-  const type=document.getElementById('ap-type').value;
-  const s=document.getElementById('ap-start').value;
-  const e=document.getElementById('ap-end').value;
-  const dEl=document.getElementById('ap-days');
-  const hEl=document.getElementById('ap-hint');
-  if(!s){dEl.value='';return;}
-  let days=type.includes('Half')?0.5:(s&&e&&e>=s?workDays(s,e):0);
-  dEl.value=days?`${days} working day(s)`:'';
-  const name=document.getElementById('ap-name').value.trim();
-  const emp=getEmp(name);
-  if(emp&&days){
-    const total=Number(emp.totalDays)||0;
-    const remain=total-calcApproved(name)-calcPending(name);
-    hEl.textContent=`Balance: ${remain} day(s) remaining | Requesting: ${days} day(s)`;
-    hEl.style.color=remain>=days?'var(--green)':'var(--red)';
-  } else hEl.textContent='';
-};
-
-// ── Apply ─────────────────────────────────────────
-window.applyLeave=async()=>{
-  const name=document.getElementById('ap-name').value.trim();
-  const dept=document.getElementById('ap-dept').value.trim();
-  const type=document.getElementById('ap-type').value;
-  const s=document.getElementById('ap-start').value;
-  const e=document.getElementById('ap-end').value||s;
-  const reason=document.getElementById('ap-reason').value.trim();
-  if(!name||!s){toast('Please enter your name and start date','err');return;}
-  const days=type.includes('Half')?0.5:workDays(s,e);
-  if(!days){toast('Please enter valid dates','err');return;}
-  const emp=getEmp(name);
-  if(emp){
-    const remain=Number(emp.totalDays||0)-calcApproved(name)-calcPending(name);
-    if(days>remain){toast(`Insufficient balance (${remain} day(s) remaining)`,'err');return;}
-  }
-  setSS('ing');
-  const data={name,dept,type,start:s,end:e,days,reason,status:'Pending',appliedAt:new Date().toISOString()};
-  await push(ref(db,'leaves'),data);
-  setSS('on'); toast('✅ Leave request submitted!');
-  sendEmail(data);
-  ['ap-name','ap-start','ap-end','ap-reason','ap-days'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('ap-hint').textContent='';
-  showTab('mylist',document.querySelectorAll('.tab')[2]);
-  document.getElementById('search-name').value=name; renderMyList();
-};
-
-// ── Approve/Reject ────────────────────────────────
-window.approveLeave=async(k,a)=>{ setSS('ing'); await update(ref(db,`leaves/${k}`),{status:a==='ok'?'Approved':'Rejected',processedAt:new Date().toISOString()}); setSS('on'); toast(a==='ok'?'✅ Approved':'❌ Rejected',a==='ok'?'ok':'err'); };
-window.cancelLeave=async(k)=>{ if(!confirm('Cancel this leave request?'))return; setSS('ing'); await update(ref(db,`leaves/${k}`),{status:'Cancelled'}); setSS('on'); toast('Leave request cancelled'); };
-
-// ── Calendar ──────────────────────────────────────
-window.changeCalMonth=d=>{ calMonth+=d; if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
-function renderCalStats(){
-  const w=Object.values(leaves).filter(l=>l.status==='Pending').length;
-  const a=Object.values(leaves).filter(l=>l.status==='Approved').length;
-  const ec=Object.keys(employees).length, tc=Object.keys(leaves).length;
-  document.getElementById('calStats').innerHTML=`
-    <div class="stat-card"><div class="stat-lbl">Employees</div><div class="stat-val">${ec}</div><div class="stat-sub">registered</div></div>
-    <div class="stat-card y"><div class="stat-lbl">Pending</div><div class="stat-val">${w}</div><div class="stat-sub">awaiting approval</div></div>
-    <div class="stat-card g"><div class="stat-lbl">Approved</div><div class="stat-val">${a}</div><div class="stat-sub">requests</div></div>
-    <div class="stat-card"><div class="stat-lbl">Total Requests</div><div class="stat-val">${tc}</div><div class="stat-sub">all time</div></div>`;
-}
-function renderCalendar(){
-  renderCalStats();
-  const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('calTitle').textContent=`${MO[calMonth]} ${calYear}`;
-  const first=new Date(calYear,calMonth,1);
-  let sd=first.getDay(); sd=sd===0?6:sd-1;
-  const cs=new Date(first); cs.setDate(cs.getDate()-sd);
-  const byDate={};
-  Object.entries(leaves).forEach(([k,l])=>{
-    if(l.status==='Cancelled'||l.status==='Rejected')return;
-    let c=new Date(l.start+'T00:00:00'), E=new Date((l.end||l.start)+'T00:00:00');
-    while(c<=E){ const ds=c.toISOString().slice(0,10); if(!byDate[ds])byDate[ds]=[]; byDate[ds].push({...l,_key:k}); c.setDate(c.getDate()+1); }
-  });
-  const grid=document.getElementById('calGrid'); grid.innerHTML='';
-  for(let i=0;i<42;i++){
-    const d=new Date(cs); d.setDate(d.getDate()+i);
-    const inM=d.getMonth()===calMonth&&d.getFullYear()===calYear;
-    const isT=d.getTime()===today.getTime();
-    const dow=d.getDay(); const ds=d.toISOString().slice(0,10);
-    const dl=byDate[ds]||[];
-    let cls='cal-day'; if(!inM)cls+=' other'; if(isT)cls+=' today'; if(dow===6)cls+=' sat'; if(dow===0)cls+=' sun';
-    const chips=dl.slice(0,3).map(l=>`<span class="lchip ${l.status==='Approved'?'lchip-ok':'lchip-wait'}">${l.name}</span>`).join('');
-    const more=dl.length>3?`<div style="font-size:9px;color:var(--text-sub)">+${dl.length-3} more</div>`:'';
-    const cell=document.createElement('div'); cell.className=cls;
-    cell.innerHTML=`<div class="day-num"><span>${d.getDate()}</span>${isT?'<div class="today-dot"></div>':''}</div>${chips}${more}`;
-    if(inM&&dl.length) cell.onclick=()=>openDayModal(ds,dl);
-    grid.appendChild(cell);
+    [employees,settings]=await Promise.all([get('getEmployees'),get('getSettings')]);
+    renderEmpGrid();
+  }catch(e){
+    document.getElementById('emp-grid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--red)">데이터를 불러오지 못했어요. 새로고침 해주세요.</div>';
   }
 }
-function openDayModal(ds,dl){
-  const d=new Date(ds+'T00:00:00');
-  document.getElementById('dayModalTitle').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  document.getElementById('dayModalBody').innerHTML=dl.map(l=>`
-    <div style="background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <span style="font-weight:700">${l.name}</span>
-        <span class="badge ${l.status==='Approved'?'b-ok':l.status==='Pending'?'b-wait':'b-no'}">${l.status}</span>
-      </div>
-      <div style="font-size:12px;color:var(--text-dim)">${l.dept?l.dept+' · ':''}<span class="type-chip ${tClass(l.type)}">${l.type}</span> · ${l.days} day(s)${l.reason?' · '+l.reason:''}</div>
-    </div>`).join('');
-  document.getElementById('dayModal').classList.add('show');
+
+function renderEmpGrid(){
+  const grid=document.getElementById('emp-grid');
+  const emps=employees.filter(e=>e.isAdmin!=='Y');
+  if(!emps.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:16px;color:var(--text3)">등록된 직원이 없어요</div>';return;}
+  grid.innerHTML=emps.map(e=>`<button class="emp-btn" onclick="empLogin('${e.name}')"><div class="en">${e.name}</div><div class="er">잔여 ${e.remainDays}일</div></button>`).join('');
 }
 
-// ── My List ───────────────────────────────────────
-window.renderMyList=()=>{
-  const name=document.getElementById('search-name').value.trim();
-  const body=document.getElementById('myBody');
-  const info=document.getElementById('myInfo');
-  if(!name){ body.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-sub);padding:24px">Enter your name to view your leave status</td></tr>'; info.style.display='none'; return; }
-  const my=Object.entries(leaves).filter(([,l])=>l.name===name).sort((a,b)=>(b[1].appliedAt||'').localeCompare(a[1].appliedAt||''));
-  const emp=getEmp(name);
-  if(emp){
-    info.style.display='block';
-    const total=Number(emp.totalDays)||0, approved=calcApproved(name), pending=calcPending(name), remain=total-approved;
-    document.getElementById('myStats').innerHTML=`
-      <div class="stat-card"><div class="stat-lbl">Annual Entitlement</div><div class="stat-val">${total}</div><div class="stat-sub">days</div></div>
-      <div class="stat-card g"><div class="stat-lbl">Used (Approved)</div><div class="stat-val">${approved}</div><div class="stat-sub">days</div></div>
-      <div class="stat-card y"><div class="stat-lbl">Pending</div><div class="stat-val">${pending}</div><div class="stat-sub">days</div></div>
-      <div class="stat-card ${remain<=3?'r':''}"><div class="stat-lbl">Remaining</div><div class="stat-val">${remain}</div><div class="stat-sub">days left</div></div>`;
-  } else info.style.display='none';
-  body.innerHTML=!my.length?'<tr><td colspan="8" style="text-align:center;color:var(--text-sub);padding:24px">No leave requests found</td></tr>'
-    :my.map(([k,l])=>`<tr>
-      <td><span class="type-chip ${tClass(l.type)}">${l.type}</span></td>
-      <td>${fmtD(l.start)}</td><td>${fmtD(l.end||l.start)}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-weight:700">${l.days}</td>
-      <td style="color:var(--text-dim)">${l.reason||'-'}</td>
-      <td style="font-size:11px;color:var(--text-sub)">${l.appliedAt?new Date(l.appliedAt).toLocaleDateString('en-US'):'-'}</td>
-      <td><span class="badge ${l.status==='Approved'?'b-ok':l.status==='Pending'?'b-wait':l.status==='Rejected'?'b-no':'b-cancel'}">${l.status}</span></td>
-      <td>${l.status==='Pending'?`<button class="btn btn-danger btn-sm" onclick="cancelLeave('${k}')">Cancel</button>`:'-'}</td>
-    </tr>`).join('');
-};
+async function empLogin(name){me=name;isAdmin=false;await enterMain();}
 
-// ── Approve List ──────────────────────────────────
-function renderApprove(){
-  const pend=Object.entries(leaves).filter(([,l])=>l.status==='Pending').sort((a,b)=>(a[1].appliedAt||'').localeCompare(b[1].appliedAt||''));
-  document.getElementById('approveBody').innerHTML=!pend.length
-    ?'<tr><td colspan="8" style="text-align:center;color:var(--text-sub);padding:24px">✅ No pending requests</td></tr>'
-    :pend.map(([k,l])=>`<tr>
-      <td style="font-weight:700">${l.name}</td>
-      <td style="color:var(--text-dim)">${l.dept||'-'}</td>
-      <td><span class="type-chip ${tClass(l.type)}">${l.type}</span></td>
-      <td style="font-size:12px">${fmtD(l.start)}${l.end&&l.end!==l.start?' – '+fmtD(l.end):''}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-weight:700">${l.days}</td>
-      <td style="color:var(--text-dim)">${l.reason||'-'}</td>
-      <td style="font-size:11px;color:var(--text-sub)">${l.appliedAt?new Date(l.appliedAt).toLocaleDateString('en-US'):'-'}</td>
-      <td style="display:flex;gap:6px">
-        <button class="btn btn-success btn-sm" onclick="approveLeave('${k}','ok')">✅ Approve</button>
-        <button class="btn btn-danger btn-sm" onclick="approveLeave('${k}','no')">❌ Reject</button>
-      </td></tr>`).join('');
-  const all=Object.entries(leaves).sort((a,b)=>(b[1].appliedAt||'').localeCompare(a[1].appliedAt||''));
-  document.getElementById('allBody').innerHTML=!all.length
-    ?'<tr><td colspan="7" style="text-align:center;color:var(--text-sub);padding:24px">No records</td></tr>'
-    :all.map(([k,l])=>`<tr>
-      <td style="font-weight:700">${l.name}</td><td style="color:var(--text-dim)">${l.dept||'-'}</td>
-      <td><span class="type-chip ${tClass(l.type)}">${l.type}</span></td>
-      <td style="font-size:12px">${fmtD(l.start)}${l.end&&l.end!==l.start?' – '+fmtD(l.end):''}</td>
-      <td>${l.days}</td>
-      <td><span class="badge ${l.status==='Approved'?'b-ok':l.status==='Pending'?'b-wait':l.status==='Rejected'?'b-no':'b-cancel'}">${l.status}</span></td>
-      <td>${l.status==='Pending'?`<button class="btn btn-danger btn-sm" onclick="cancelLeave('${k}')">Delete</button>`:'-'}</td>
-    </tr>`).join('');
+async function adminLogin(){
+  const pw=document.getElementById('admin-pw').value;
+  const adminEmp=employees.find(e=>e.isAdmin==='Y');
+  const adminPw=settings['관리자비밀번호']||'jnfam2026';
+  if(pw!==adminPw){document.getElementById('login-err').textContent='❌ 비밀번호가 틀렸습니다';return;}
+  me=adminEmp?adminEmp.name:'관리자';isAdmin=true;await enterMain();
 }
 
-// ── Employees ─────────────────────────────────────
-window.addEmployee=async()=>{
-  const name=document.getElementById('emp-name').value.trim();
-  const dept=document.getElementById('emp-dept').value.trim();
-  const total=document.getElementById('emp-total').value;
-  const join=document.getElementById('emp-join').value;
-  if(!name||!total){toast('Please enter name and annual leave days','err');return;}
-  if(Object.values(employees).find(e=>e.name===name)){toast('Employee already exists','err');return;}
-  setSS('ing'); await push(ref(db,'employees'),{name,dept,totalDays:Number(total),joinDate:join,createdAt:new Date().toISOString()}); setSS('on');
-  toast(`✅ ${name} added!`);
-  ['emp-name','emp-dept','emp-total','emp-join'].forEach(id=>document.getElementById(id).value='');
-};
-window.deleteEmployee=async(k,name)=>{ if(!confirm(`Remove ${name}?`))return; setSS('ing'); await remove(ref(db,`employees/${k}`)); setSS('on'); toast(`${name} removed`); };
-window.editDays=async(k,name,cur)=>{
-  const v=prompt(`Update annual leave for ${name} (current: ${cur})`,cur);
-  if(v===null)return; const n=Number(v);
-  if(isNaN(n)||n<0){toast('Invalid number','err');return;}
-  setSS('ing'); await update(ref(db,`employees/${k}`),{totalDays:n}); setSS('on');
-  toast(`✅ Updated to ${n} days`);
-};
-function renderEmployees(){
-  const list=Object.entries(employees);
-  const grid=document.getElementById('empGrid');
-  if(!list.length){grid.innerHTML='<div style="color:var(--text-sub);padding:20px">No employees registered yet</div>';return;}
-  grid.innerHTML=list.map(([k,e])=>{
-    const total=Number(e.totalDays)||0, approved=calcApproved(e.name), remain=total-approved;
-    const pct=total?Math.round(approved/total*100):0;
-    return `<div class="emp-card">
-      <div class="emp-name">${e.name}</div>
-      <div class="emp-sub">${e.dept||'No dept'}${e.joinDate?' · '+e.joinDate:''}</div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-sub);margin-bottom:4px">
-        <span>Total <b style="color:var(--accent)">${total}</b>d</span>
-        <span>Used <b style="color:var(--green)">${approved}</b>d</span>
-        <span>Left <b style="color:${remain<=3?'var(--red)':'var(--text)'}">${remain}</b>d</span>
-      </div>
-      <div class="leave-bar"><div class="leave-fill" style="width:${pct}%;background:${remain<=3?'var(--red)':'var(--green)'}"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-sub);margin-top:2px"><span>${pct}% used</span><span style="color:${remain<=3?'var(--red)':'inherit'}">${remain}d left</span></div>
-      <div style="display:flex;gap:6px;margin-top:10px">
-        <button class="btn btn-secondary btn-sm" onclick="editDays('${k}','${e.name}',${total})">✏️ Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteEmployee('${k}','${e.name}')">Remove</button>
-      </div>
-    </div>`;
-  }).join('');
+async function enterMain(){
+  leaves=await get('getLeaves');
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-screen').style.display='block';
+  document.getElementById('hd-name').textContent=me;
+  document.getElementById('hd-badge').innerHTML=isAdmin?'<span class="badge badge-admin">👑 관리자</span>':'<span class="badge badge-user">직원</span>';
+  renderMain();
 }
-renderCalendar();
+
+function logout(){
+  me=null;isAdmin=false;
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('main-screen').style.display='none';
+  document.getElementById('admin-pw').value='';
+  document.getElementById('login-err').textContent='';
+}
+
+function renderMain(){renderStats();renderTabs();renderTabContent();}
+
+function renderStats(){
+  const emp=employees.find(e=>e.name===me)||{};
+  let html='';
+  if(isAdmin){
+    const pending=leaves.filter(l=>l.status==='대기').length;
+    const approved=leaves.filter(l=>l.status==='승인').length;
+    html=`
+      <div class="stat st-o"><div class="lbl">승인 대기</div><div class="val" style="color:var(--orange)">${pending}</div><div class="sub">건</div></div>
+      <div class="stat st-g"><div class="lbl">승인 완료</div><div class="val" style="color:var(--green)">${approved}</div><div class="sub">건</div></div>
+      <div class="stat st-b"><div class="lbl">전체 직원</div><div class="val" style="color:var(--accent)">${employees.filter(e=>e.isAdmin!=='Y').length}</div><div class="sub">명</div></div>
+      <div class="stat st-r"><div class="lbl">전체 신청</div><div class="val" style="color:var(--red)">${leaves.length}</div><div class="sub">건</div></div>`;
+  }else{
+    const total=Number(emp.totalDays)||0,used=Number(emp.usedDays)||0,remain=Number(emp.remainDays)||0;
+    const pending=leaves.filter(l=>l.name===me&&l.status==='대기').length;
+    html=`
+      <div class="stat st-b"><div class="lbl">총 연차</div><div class="val" style="color:var(--accent)">${total}</div><div class="sub">일</div></div>
+      <div class="stat st-r"><div class="lbl">사용</div><div class="val" style="color:var(--red)">${used}</div><div class="sub">일</div></div>
+      <div class="stat st-g"><div class="lbl">잔여</div><div class="val" style="color:var(--green)">${remain}</div><div class="sub">일</div></div>
+      <div class="stat st-o"><div class="lbl">대기중</div><div class="val" style="color:var(--orange)">${pending}</div><div class="sub">건</div></div>`;
+  }
+  document.getElementById('stats').innerHTML=html;
+}
+
+function renderTabs(){
+  const tabs=isAdmin?['📋 승인 대기','📅 전체 내역','🗓 캘린더','👥 직원 현황']:['✉️ 휴가 신청','📋 내 내역','🗓 팀 캘린더'];
+  document.getElementById('tabs').innerHTML=tabs.map((t,i)=>`<button class="tab ${activeTab===i?'active':''}" onclick="setTab(${i})">${t}</button>`).join('');
+}
+
+function setTab(i){activeTab=i;renderTabs();renderTabContent();}
+
+function renderTabContent(){
+  const el=document.getElementById('tab-content');
+  if(isAdmin){
+    if(activeTab===0)el.innerHTML=renderPending();
+    else if(activeTab===1)el.innerHTML=renderAllLeaves();
+    else if(activeTab===2){el.innerHTML=renderCalHtml();renderCal();}
+    else el.innerHTML=renderEmpStatus();
+  }else{
+    if(activeTab===0)el.innerHTML=renderForm();
+    else if(activeTab===1)el.innerHTML=renderMyLeaves();
+    else{el.innerHTML=renderCalHtml();renderCal();}
+  }
+}
+
+// ── 신청 폼 ───────────────────────────────────
+function renderForm(){return `
+<div class="card">
+  <div class="card-hd"><h3>✉️ 휴가 신청</h3></div>
+  <div class="card-bd">
+    <div class="fgrid">
+      <div class="fg"><label>휴가 종류</label>
+        <select id="f-type" onchange="onTypeChange()">
+          <option>연차</option><option>반차(오전)</option><option>반차(오후)</option><option>병가</option><option>기타</option>
+        </select>
+      </div>
+      <div class="fg"><label>일수</label><input type="number" id="f-days" min="0.5" max="30" step="0.5" value="1"></div>
+      <div class="fg"><label>시작일</label><input type="date" id="f-start" oninput="calcDays()"></div>
+      <div class="fg" id="end-group"><label>종료일</label><input type="date" id="f-end" oninput="calcDays()"></div>
+      <div class="fg ff"><label>사유</label><textarea id="f-reason" placeholder="사유 입력 (선택)"></textarea></div>
+    </div>
+    <div class="fa"><button class="btn btn-p" onclick="submitLeave()">신청하기</button></div>
+  </div>
+</div>`;}
+
+function onTypeChange(){
+  const t=document.getElementById('f-type').value;
+  const isHalf=t.includes('반차');
+  document.getElementById('f-days').value=isHalf?0.5:1;
+  document.getElementById('end-group').style.display=isHalf?'none':'';
+  if(isHalf){const s=document.getElementById('f-start').value;if(s)document.getElementById('f-end')&&(document.getElementById('f-end').value=s);}
+}
+
+function calcDays(){
+  const s=document.getElementById('f-start').value;
+  const e=document.getElementById('f-end')?.value;
+  const t=document.getElementById('f-type').value;
+  if(t.includes('반차')){document.getElementById('f-days').value=0.5;return;}
+  if(s&&e){const d=(new Date(e)-new Date(s))/86400000+1;document.getElementById('f-days').value=d>0?d:1;}
+}
+
+async function submitLeave(){
+  const type=document.getElementById('f-type').value;
+  const start=document.getElementById('f-start').value;
+  const isHalf=type.includes('반차');
+  const end=isHalf?start:(document.getElementById('f-end')?.value||start);
+  const days=document.getElementById('f-days').value;
+  const reason=document.getElementById('f-reason').value;
+  if(!start){toast('❌ 시작일을 입력해주세요');return;}
+  if(!isHalf&&new Date(end)<new Date(start)){toast('❌ 종료일이 시작일보다 빠릅니다');return;}
+  try{
+    const res=await post({action:'applyLeave',name:me,type,startDate:start,endDate:end,days,reason});
+    if(res.success){
+      toast('✅ 휴가 신청이 완료됐어요!');
+      leaves=await get('getLeaves');
+      renderStats();setTab(1);
+    }else{toast('❌ 신청 실패');}
+  }catch(e){toast('❌ 오류가 발생했어요');}
+}
+
+// ── 내 내역 ───────────────────────────────────
+function renderMyLeaves(){
+  const my=leaves.filter(l=>l.name===me).reverse();
+  if(!my.length)return`<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>신청 내역이 없어요</p></div></div></div>`;
+  return`<div class="card">
+    <div class="card-hd"><h3>📋 내 신청 내역</h3><span style="font-size:12px;color:var(--text3)">${my.length}건</span></div>
+    <div class="card-bd"><div class="llist">${my.map(l=>`
+      <div class="litem">
+        <div class="li-left">
+          <div class="li-title">${l.type} · ${l.days}일</div>
+          <div class="li-meta">${l.startDate} ~ ${l.endDate} · 신청: ${l.applyDate}</div>
+          ${l.note?`<div style="font-size:11px;color:var(--text3);margin-top:3px">📝 ${l.note}</div>`:''}
+        </div>
+        <div class="li-act">
+          <span class="sbadge s${l.status}">${l.status}</span>
+          ${l.status==='대기'?`<button class="btn btn-o btn-sm" onclick="cancelLeave('${l.id}')">취소</button>`:''}
+        </div>
+      </div>`).join('')}
+    </div></div>
+  </div>`;}
+
+async function cancelLeave(id){
+  if(!confirm('이 신청을 취소할까요?'))return;
+  const res=await post({action:'cancelLeave',id,name:me});
+  if(res.success){toast('✅ 취소됐어요');leaves=await get('getLeaves');renderStats();renderTabContent();}
+}
+
+// ── 관리자: 승인 대기 ─────────────────────────
+function renderPending(){
+  const p=leaves.filter(l=>l.status==='대기').reverse();
+  if(!p.length)return`<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">✅</div><p>대기 중인 신청이 없어요</p></div></div></div>`;
+  return`<div class="card">
+    <div class="card-hd"><h3>📋 승인 대기</h3><span style="font-size:12px;color:var(--orange);font-weight:700">${p.length}건</span></div>
+    <div class="card-bd"><div class="llist">${p.map(l=>`
+      <div class="litem">
+        <div class="li-left">
+          <div class="li-title">👤 ${l.name} · ${l.type} · ${l.days}일</div>
+          <div class="li-meta">${l.startDate} ~ ${l.endDate} · 신청: ${l.applyDate}</div>
+          ${l.reason?`<div style="font-size:11px;color:var(--text2);margin-top:3px">사유: ${l.reason}</div>`:''}
+        </div>
+        <div class="li-act">
+          <button class="btn btn-s btn-sm" onclick="openModal('${l.id}')">승인</button>
+          <button class="btn btn-d btn-sm" onclick="openModal('${l.id}')">반려</button>
+        </div>
+      </div>`).join('')}
+    </div></div>
+  </div>`;}
+
+// ── 관리자: 전체 내역 ─────────────────────────
+function renderAllLeaves(){
+  const all=[...leaves].reverse();
+  if(!all.length)return`<div class="card"><div class="card-bd"><div class="empty"><div class="empty-icon">📭</div><p>신청 내역이 없어요</p></div></div></div>`;
+  return`<div class="card">
+    <div class="card-hd"><h3>📅 전체 내역</h3><span style="font-size:12px;color:var(--text3)">${all.length}건</span></div>
+    <div class="card-bd"><div class="llist">${all.map(l=>`
+      <div class="litem">
+        <div class="li-left">
+          <div class="li-title">👤 ${l.name} · ${l.type} · ${l.days}일</div>
+          <div class="li-meta">${l.startDate} ~ ${l.endDate} · 신청: ${l.applyDate}${l.processDate?' · 처리: '+l.processDate:''}</div>
+          ${l.note?`<div style="font-size:11px;color:var(--text3);margin-top:3px">📝 ${l.note}</div>`:''}
+        </div>
+        <span class="sbadge s${l.status}">${l.status}</span>
+      </div>`).join('')}
+    </div></div>
+  </div>`;}
+
+// ── 관리자: 직원 현황 ─────────────────────────
+function renderEmpStatus(){
+  const emps=employees.filter(e=>e.isAdmin!=='Y');
+  return`<div class="card">
+    <div class="card-hd"><h3>👥 직원 연차 현황</h3></div>
+    <div class="card-bd" style="padding:0">
+      <table class="etable">
+        <thead><tr><th>직원명</th><th>총 연차</th><th>사용</th><th>잔여</th><th>사용률</th></tr></thead>
+        <tbody>${emps.map(e=>{
+          const total=Number(e.totalDays)||0,used=Number(e.usedDays)||0,remain=Number(e.remainDays)||0;
+          const pct=total?Math.round(used/total*100):0;
+          const color=pct>80?'var(--red)':pct>50?'var(--orange)':'var(--accent)';
+          return`<tr>
+            <td style="font-weight:700">${e.name}</td>
+            <td>${total}일</td>
+            <td style="color:var(--red)">${used}일</td>
+            <td style="color:var(--green);font-weight:700">${remain}일</td>
+            <td style="min-width:100px"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">${pct}%</div><div class="pbar"><div class="pfill" style="width:${pct}%;background:${color}"></div></div></td>
+          </tr>`;}).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;}
+
+// ── 캘린더 ────────────────────────────────────
+function renderCalHtml(){return`<div class="card"><div class="card-bd">
+  <div class="cal-hd"><h3 id="cal-title"></h3><div class="cal-nav"><button onclick="chMonth(-1)">◀</button><button onclick="chMonth(1)">▶</button></div></div>
+  <div class="cgrid" id="cgrid"></div>
+</div></div>`;}
+
+function chMonth(d){calM+=d;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCal();}
+
+function renderCal(){
+  const title=document.getElementById('cal-title');
+  const grid=document.getElementById('cgrid');
+  if(!title||!grid)return;
+  title.textContent=`${calY}년 ${calM+1}월`;
+  const COLORS=['#2563eb','#16a34a','#7c3aed','#ea580c','#dc2626','#0891b2','#d97706','#be185d'];
+  const ec={};employees.forEach((e,i)=>ec[e.name]=COLORS[i%COLORS.length]);
+  const days=['일','월','화','수','목','금','토'];
+  let html=days.map(d=>`<div class="cdh">${d}</div>`).join('');
+  const first=new Date(calY,calM,1),last=new Date(calY,calM+1,0);
+  const today=new Date();
+  for(let i=0;i<first.getDay();i++){const d=new Date(calY,calM,-first.getDay()+i+1);html+=`<div class="cd om"><div class="dn">${d.getDate()}</div></div>`;}
+  for(let d=1;d<=last.getDate();d++){
+    const date=new Date(calY,calM,d);
+    const ds=date.toISOString().split('T')[0];
+    const isToday=date.toDateString()===today.toDateString();
+    const dow=date.getDay();
+    const dl=leaves.filter(l=>l.status==='승인'&&l.startDate<=ds&&l.endDate>=ds);
+    const tags=dl.slice(0,3).map(l=>`<div class="ctag" style="background:${ec[l.name]||'#2563eb'}22;color:${ec[l.name]||'#2563eb'}">${l.name}</div>`).join('');
+    html+=`<div class="cd${isToday?' today':''}${dow===0?' sun':''}${dow===6?' sat':''}"><div class="dn">${d}</div>${tags}</div>`;
+  }
+  grid.innerHTML=html;
+}
+
+// ── 모달 ──────────────────────────────────────
+function openModal(id){
+  document.getElementById('modal-id').value=id;
+  document.getElementById('modal-note').value='';
+  document.getElementById('modal-wrap').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-wrap').classList.remove('open');}
+
+async function processLeave(status){
+  const id=document.getElementById('modal-id').value;
+  const note=document.getElementById('modal-note').value;
+  try{
+    const res=await post({action:'processLeave',id,status,processor:me,note});
+    if(res.success){
+      toast(status==='승인'?'✅ 승인됐어요':'❌ 반려됐어요');
+      closeModal();
+      [leaves,employees]=await Promise.all([get('getLeaves'),get('getEmployees')]);
+      renderMain();
+    }
+  }catch(e){toast('❌ 처리 실패');}
+}
+
+// ── 토스트 ────────────────────────────────────
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2800);}
+
+document.getElementById('modal-wrap').addEventListener('click',e=>{if(e.target===document.getElementById('modal-wrap'))closeModal();});
+init();
 </script>
 </body>
 </html>
