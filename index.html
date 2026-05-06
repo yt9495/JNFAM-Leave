@@ -444,21 +444,7 @@ function statusLabel(s){ return t('statusMap')[s]||s; }
 
 // ── API ───────────────────────────────────────
 async function apiGet(action){const r=await fetch(API+'?action='+action+'&t='+Date.now());return r.json();}
-async function apiPost(body){
-  // [버그수정] Google Apps Script는 CORS preflight 처리 중 POST가 2번 실행됨
-  // XMLHttpRequest는 이 리디렉션을 따라가지 않아 중복 없이 1번만 전송됨
-  return new Promise((resolve,reject)=>{
-    const xhr=new XMLHttpRequest();
-    xhr.open('POST',API,true);
-    xhr.setRequestHeader('Content-Type','text/plain');
-    xhr.onload=()=>{
-      try{resolve(JSON.parse(xhr.responseText));}
-      catch(e){resolve({success:true});}
-    };
-    xhr.onerror=()=>reject(new Error('Network error'));
-    xhr.send(JSON.stringify(body));
-  });
-}
+async function apiPost(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body)});return r.json();}
 
 // ── 초기화 ────────────────────────────────────
 async function init(){
