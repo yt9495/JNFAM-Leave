@@ -428,7 +428,7 @@ function isWeekend(ds){var p=ds.split('-');return new Date(+p[0],+p[1]-1,+p[2]).
 function isFedHoliday(ds){return !!federalHolidays[ds];}
 
 function calcBizDays(s,e,type){
-  if(type&&(type.includes('반차')||type.includes('Half')))return 0.5;
+  if(!s||!e)return 0;
   var sp=s.split('-'),ep=e.split('-');
   var start=new Date(+sp[0],+sp[1]-1,+sp[2]),end=new Date(+ep[0],+ep[1]-1,+ep[2]);
   var cnt=0,cur=new Date(start);
@@ -620,7 +620,7 @@ async function submitLeave(){
   const reason=document.getElementById('f-reason').value;
   if(!start){toast(t('errStart'));return;}
   if(!half&&end<start){toast(t('errEndDate'));return;}
-  const days=calcBizDays(start,end,type);
+  const days=half?0.5:calcBizDays(start,end,type);
   if(days===0){toast(t('errNoWorkday'));return;}
   try{
     const res=await apiPost({action:'applyLeave',name:me,type,startDate:start,endDate:end,days,reason});
